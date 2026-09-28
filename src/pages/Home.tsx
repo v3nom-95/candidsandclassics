@@ -16,9 +16,9 @@ export const Home: React.FC = () => {
       <section className="hero">
         <div className="hero-video" aria-hidden="true">
           <iframe
-            src="https://www.youtube-nocookie.com/embed/ueuj4cmeLzI?autoplay=1&mute=1&loop=1&playlist=ueuj4cmeLzI&controls=0&playsinline=1&rel=0"
+            src="https://www.youtube-nocookie.com/embed/ueuj4cmeLzI?autoplay=1&mute=1&loop=1&playlist=ueuj4cmeLzI&controls=0&disablekb=1&fs=0&iv_load_policy=3&playsinline=1&rel=0&modestbranding=1"
             title="Candids & Clicks wedding film"
-            allow="autoplay; encrypted-media; picture-in-picture"
+            allow="autoplay; encrypted-media"
             tabIndex={-1}
           />
         </div>

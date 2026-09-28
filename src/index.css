@@ -176,6 +176,7 @@ ul {
   height: max(100vh, 56.25vw);
   transform: translate(-50%, -50%);
   border: 0;
+  pointer-events: none;
 }
 
 .hero-overlay {

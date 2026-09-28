@@ -14,11 +14,14 @@ export const Home: React.FC = () => {
   return (
     <div>
       <section className="hero">
-        <img 
-          src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=1920&q=80" 
-          alt="Indian Wedding Couple" 
-          className="hero-bg animate-fade-in"
-        />
+        <div className="hero-video" aria-hidden="true">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/ueuj4cmeLzI?autoplay=1&mute=1&loop=1&playlist=ueuj4cmeLzI&controls=0&playsinline=1&rel=0"
+            title="Candids & Clicks wedding film"
+            allow="autoplay; encrypted-media; picture-in-picture"
+            tabIndex={-1}
+          />
+        </div>
         <div className="hero-overlay"></div>
         <div className="hero-content animate-fade-in delay-200">
           <span className="hero-subtitle">Premium Wedding Photography</span>

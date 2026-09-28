@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
-const RANDOM_PHOTOS = [
-  'https://images.unsplash.com/photo-1543880884-6338e55e0903?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1583939000240-690db252f4dc?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1544078755-9b2fdfb8fb5e?auto=format&fit=crop&w=800&q=80',
-];
+import { fetchPortfolios } from '../lib/data';
 
 export const Home: React.FC = () => {
+  const [galleryPhotos, setGalleryPhotos] = useState<string[]>([]);
+
+  useEffect(() => {
+    fetchPortfolios()
+      .then(portfolios => setGalleryPhotos(portfolios.flatMap(portfolio => portfolio.photos)))
+      .catch(error => console.error('Failed to load homepage gallery photos', error));
+  }, []);
+
   return (
     <div>
       <section className="hero">
@@ -40,16 +40,17 @@ export const Home: React.FC = () => {
           </p>
         </div>
 
-        <div className="scroll-gallery-container mt-8">
-          <div className="scroll-gallery-track">
-            {/* Duplicate array for seamless infinite loop */}
-            {[...RANDOM_PHOTOS, ...RANDOM_PHOTOS].map((photo, index) => (
-              <div className="scroll-item" key={index}>
-                <img src={photo} alt={`Wedding moment ${index + 1}`} loading="lazy" />
-              </div>
-            ))}
+        {galleryPhotos.length > 0 && (
+          <div className="scroll-gallery-container mt-8">
+            <div className="scroll-gallery-track">
+              {[...galleryPhotos, ...galleryPhotos].map((photo, index) => (
+                <div className="scroll-item" key={`${photo}-${index}`} aria-hidden={index >= galleryPhotos.length}>
+                  <img src={photo} alt={index < galleryPhotos.length ? `Wedding moment ${index + 1}` : ''} loading="lazy" />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
           
         <div className="container text-center mt-8" style={{ marginTop: '4rem' }}>
           <Link to="/portfolio" className="btn">Explore Client Stories</Link>

@@ -10,14 +10,14 @@ export const About: React.FC = () => {
           <div>
             <img 
               src="https://images.unsplash.com/photo-1595981267035-7b04d84b52ad?auto=format&fit=crop&w=800&q=80" 
-              alt="Candids & Clicks Studio" 
+              alt="Candids & Classics Studio"
               className="about-image"
             />
           </div>
           <div>
             <h2 style={{ fontSize: '2rem', marginBottom: '1.5rem', color: 'var(--color-primary)' }}>Capturing the Soul of Indian Traditions</h2>
             <p style={{ marginBottom: '1.5rem', fontSize: '1.1rem', color: 'var(--color-text-dark)' }}>
-              Welcome to Candids & Clicks. With over two decades of expertise in visual storytelling, we specialize in weaving the intricate tapestry of indigenous Indian weddings into timeless masterpieces. 
+              Welcome to Candids & Classics. With over two decades of expertise in visual storytelling, we capture weddings, childhood, and the everyday moments that deserve to be remembered.
             </p>
             <p style={{ marginBottom: '1.5rem', fontSize: '1.1rem', color: 'var(--color-text-dark)' }}>
               From the vibrant hues of the Haldi to the profound silence of the pheras, our approach is unobtrusive yet deeply intimate. We believe that true beauty lies in raw, unscripted moments.

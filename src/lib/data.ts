@@ -5,18 +5,27 @@ export interface Portfolio {
   photos: string[];
 }
 
-// Default mock data in case the Google Sheet URL is not provided yet
-const MOCK_CSV_DATA = `Client Name,Photo 1,Photo 2,Photo 3,Photo 4
-Rohan & Anjali,https://images.unsplash.com/photo-1583939000240-690db252f4dc?auto=format&fit=crop&q=80,https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80,https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80,https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&q=80
-Vikram & Neha,https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80,https://images.unsplash.com/photo-1505932794465-147d1f1b2c97?auto=format&fit=crop&q=80,https://images.unsplash.com/photo-1543880884-6338e55e0903?auto=format&fit=crop&q=80
-Arjun & Priya,https://images.unsplash.com/photo-1544078755-9b2fdfb8fb5e?auto=format&fit=crop&q=80,https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=80
-`;
+export type PortfolioCategory = 'weddings' | 'kids-photography' | 'everyday-joys';
 
-// Replace this with the actual published CSV link from Google Sheets
-export const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1AxmyiMhkZOYT_fVKXzT1nBxhBTvxwFTyy4dT696ZERk/export?format=csv'; 
+export interface WeddingFilm {
+  title: string;
+  videoId: string;
+  description: string;
+}
 
-export const fetchPortfolios = async (): Promise<Portfolio[]> => {
-  return new Promise((resolve, reject) => {
+export const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1AxmyiMhkZOYT_fVKXzT1nBxhBTvxwFTyy4dT696ZERk/export?format=csv';
+export const PORTFOLIO_SHEET_CSV_URLS: Record<PortfolioCategory, string> = {
+  weddings: GOOGLE_SHEET_CSV_URL,
+  'kids-photography': 'https://docs.google.com/spreadsheets/d/11o6D6lYRvB7buJQ7G7YCJpD56HUCp59AmnlUgfa8xp8/export?format=csv',
+  'everyday-joys': '',
+};
+export const WEDDING_FILMS_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1UafxfsA9-TcYhCJ1Q5MZJ0YJgz7sP8CGn85ztK3q9po/export?format=csv';
+
+export const fetchPortfolios = async (category: PortfolioCategory = 'weddings'): Promise<Portfolio[]> => {
+  const sheetUrl = PORTFOLIO_SHEET_CSV_URLS[category];
+  if (!sheetUrl) return [];
+
+  return new Promise((resolve) => {
     const parseData = (csvString: string) => {
       Papa.parse(csvString, {
         header: false,
@@ -60,21 +69,47 @@ export const fetchPortfolios = async (): Promise<Portfolio[]> => {
           resolve(portfolios);
         },
         error: (error: Error) => {
-          reject(error);
+          console.error(`Failed to parse ${category} portfolio sheet`, error);
+          resolve([]);
         }
       });
     };
 
-    if (GOOGLE_SHEET_CSV_URL) {
-      fetch(GOOGLE_SHEET_CSV_URL)
-        .then(res => res.text())
-        .then(text => parseData(text))
-        .catch(err => {
-          console.error("Failed to fetch from Google Sheets, using mock data", err);
-          parseData(MOCK_CSV_DATA);
-        });
-    } else {
-      parseData(MOCK_CSV_DATA);
-    }
+    fetch(sheetUrl)
+      .then((response) => {
+        if (!response.ok) throw new Error(`Google Sheets returned ${response.status}`);
+        return response.text();
+      })
+      .then(parseData)
+      .catch((error: Error) => {
+        console.error(`Failed to fetch ${category} portfolio sheet`, error);
+        resolve([]);
+      });
   });
+};
+
+const getYouTubeVideoId = (url: string): string => {
+  const match = url.match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|shorts\/|watch\?v=))([\w-]{11})/);
+  return match?.[1] ?? '';
+};
+
+export const fetchWeddingFilms = async (): Promise<WeddingFilm[]> => {
+  if (!WEDDING_FILMS_SHEET_CSV_URL) return [];
+
+  try {
+    const response = await fetch(WEDDING_FILMS_SHEET_CSV_URL);
+    if (!response.ok) throw new Error(`Google Sheets returned ${response.status}`);
+    const result = Papa.parse<string[]>(await response.text(), { skipEmptyLines: true });
+    return result.data.slice(1).flatMap((row) => {
+      const videoId = getYouTubeVideoId(row[1] ?? '');
+      return videoId ? [{
+        title: row[0] || 'Wedding Film',
+        videoId,
+        description: row[2] || '',
+      }] : [];
+    });
+  } catch (error) {
+    console.error('Failed to fetch wedding films from Google Sheets', error);
+    return [];
+  }
 };

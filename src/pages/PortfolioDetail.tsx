@@ -2,10 +2,11 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, ArrowLeft } from 'lucide-react';
 import { fetchPortfolios } from '../lib/data';
-import type { Portfolio } from '../lib/data';
+import type { Portfolio, PortfolioCategory } from '../lib/data';
 
 export const PortfolioDetail: React.FC = () => {
-  const { clientName } = useParams<{ clientName: string }>();
+  const { category: routeCategory, clientName } = useParams<{ category?: string; clientName: string }>();
+  const category = (routeCategory || 'weddings') as PortfolioCategory;
   const [portfolio, setPortfolio] = useState<Portfolio | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -15,7 +16,7 @@ export const PortfolioDetail: React.FC = () => {
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
-    fetchPortfolios()
+    fetchPortfolios(category)
       .then(data => {
         const found = data.find(p => p.clientName === clientName);
         setPortfolio(found || null);
@@ -25,7 +26,7 @@ export const PortfolioDetail: React.FC = () => {
         console.error(err);
         setLoading(false);
       });
-  }, [clientName]);
+  }, [category, clientName]);
 
   // Scroll to a specific slide index
   const goToSlide = useCallback((index: number) => {

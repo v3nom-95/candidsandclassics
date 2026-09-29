@@ -1,5 +1,20 @@
 # React + TypeScript + Vite
 
+## Portfolio Sheets
+
+The Portfolio menu includes Weddings, Wedding Films, Kids Photography, and Everyday Joys. Each section reads its own published Google Sheets CSV. Configure the published CSV URLs in `src/lib/data.ts`.
+
+Create one sheet per category with a header row, then one row per session or film:
+
+- Weddings: `Client Name, Photo 1, Photo 2, Photo 3...`
+- Kids Photography: `Client Name, Photo 1, Photo 2, Photo 3...` (the supplied sheet is connected)
+- Everyday Joys: `Client Name, Photo 1, Photo 2, Photo 3...`
+- Wedding Films: `Title, YouTube URL, Description` (the supplied Movies sheet is connected)
+
+Photo cells should contain public image URLs or public Google Drive file links. Film rows should contain a YouTube watch/share URL. The homepage hero always uses the existing YouTube video `ueuj4cmeLzI`; the Movies sheet's `Background MP4 URL` column, if present, is ignored.
+
+Publish each sheet to the web as CSV, then set its exported CSV URL in `PORTFOLIO_SHEET_CSV_URLS` or `WEDDING_FILMS_SHEET_CSV_URL` in `src/lib/data.ts`. The homepage and portfolio pages show no sample content when a sheet is empty or not configured.
+
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
 Currently, two official plugins are available:

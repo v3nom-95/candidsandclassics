@@ -28,7 +28,7 @@ export const Layout: React.FC = () => {
       }}>
         <div className="container">
           <Link to="/" className="navbar-logo" style={{ color: navSolid ? 'var(--color-primary)' : 'var(--color-text-light)' }}>
-            CANDIDS <span style={{ color: 'var(--color-secondary)' }}>&</span> CLICKS
+            CANDIDS <span style={{ color: 'var(--color-secondary)' }}>&</span> CLASSICS
           </Link>
           <button
             className="navbar-toggle"
@@ -43,7 +43,15 @@ export const Layout: React.FC = () => {
           <div className={`navbar-links ${mobileMenuOpen ? 'is-open' : ''}`} id="primary-navigation">
             <Link to="/" onClick={() => setMobileMenuOpen(false)} className={location.pathname === '/' ? 'active' : ''} style={{ color: navSolid ? 'var(--color-text-dark)' : 'var(--color-text-light)' }}>Home</Link>
             <Link to="/about" onClick={() => setMobileMenuOpen(false)} className={location.pathname.includes('/about') ? 'active' : ''} style={{ color: navSolid ? 'var(--color-text-dark)' : 'var(--color-text-light)' }}>About</Link>
-            <Link to="/portfolio" onClick={() => setMobileMenuOpen(false)} className={location.pathname.includes('/portfolio') ? 'active' : ''} style={{ color: navSolid ? 'var(--color-text-dark)' : 'var(--color-text-light)' }}>Portfolio</Link>
+            <div className={`nav-dropdown ${location.pathname.includes('/portfolio') ? 'active' : ''}`}>
+              <Link to="/portfolio/weddings" onClick={() => setMobileMenuOpen(false)} className={location.pathname.includes('/portfolio') ? 'active' : ''} style={{ color: navSolid ? 'var(--color-text-dark)' : 'var(--color-text-light)' }}>Portfolio</Link>
+              <div className="nav-dropdown-menu">
+                <Link to="/portfolio/weddings" onClick={() => setMobileMenuOpen(false)}>Weddings</Link>
+                <Link to="/portfolio/wedding-films" onClick={() => setMobileMenuOpen(false)}>Wedding Films</Link>
+                <Link to="/portfolio/kids-photography" onClick={() => setMobileMenuOpen(false)}>Kids Photography</Link>
+                <Link to="/portfolio/everyday-joys" onClick={() => setMobileMenuOpen(false)}>Everyday Joys</Link>
+              </div>
+            </div>
             <Link to="/blog" onClick={() => setMobileMenuOpen(false)} className={location.pathname.includes('/blog') ? 'active' : ''} style={{ color: navSolid ? 'var(--color-text-dark)' : 'var(--color-text-light)' }}>Blog</Link>
             <Link to="/contact" onClick={() => setMobileMenuOpen(false)} className={location.pathname.includes('/contact') ? 'active' : ''} style={{ color: navSolid ? 'var(--color-text-dark)' : 'var(--color-text-light)' }}>Contact</Link>
           </div>
@@ -56,9 +64,9 @@ export const Layout: React.FC = () => {
 
       <footer className="footer">
         <div className="container">
-          <div className="footer-logo">CANDIDS & CLICKS</div>
+          <div className="footer-logo">CANDIDS & CLASSICS</div>
           <p style={{ maxWidth: '600px', margin: '0 auto' }}>
-            Capturing the ethereal beauty of indigenous Indian weddings. We believe every glance, every tear, and every smile tells a timeless story.
+            Capturing the beauty of weddings, childhood, and all the little moments in between. Every glance, every laugh, and every smile tells a timeless story.
           </p>
           <div className="footer-socials">
             <a href="#">Instagram</a>
@@ -66,7 +74,7 @@ export const Layout: React.FC = () => {
             <a href="#"><Mail size={24} /></a>
           </div>
           <div className="footer-bottom">
-            &copy; {new Date().getFullYear()} Candids & Clicks Studio. All rights reserved.
+            &copy; {new Date().getFullYear()} Candids & Classics Studio. All rights reserved.
           </div>
         </div>
       </footer>

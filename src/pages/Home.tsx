@@ -83,7 +83,7 @@ export const Home: React.FC = () => {
       </section>
 
       {photoCategories.map(({ key, title, description }, categoryIndex) => (
-        <section className="section home-category-section" key={key}>
+        <section className={`section home-category-section${categoryIndex % 2 === 1 ? ' home-category-section--alternate' : ''}`} key={key}>
           <div className="container">
             <div className="home-category-heading">
               <div>

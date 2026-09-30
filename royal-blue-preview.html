@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#edf4fb">
+  <meta name="description" content="A royal-blue color direction for Candids & Classics wedding photography.">
+  <title>Candids & Classics | Royal Blue Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --blue-950: #16375e;
+      --blue-800: #28558a;
+      --blue-700: #3971aa;
+      --blue-500: #78a3cf;
+      --blue-300: #bdd2e7;
+      --blue-150: #dce8f3;
+      --blue-050: #f3f7fb;
+      --gold: #D4AF37;
+      --paper: #fbfcfe;
+      --ink: #22364b;
+      --muted: #65788c;
+      --line: #d9e4ef;
+      --heading: 'Cinzel', Georgia, serif;
+      --body: 'Montserrat', sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--body);
+      line-height: 1.7;
+    }
+    img { display: block; width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    .container { width: min(1200px, calc(100% - 64px)); margin-inline: auto; }
+
+    .site-header {
+      position: absolute;
+      inset: 0 0 auto;
+      z-index: 5;
+      border-bottom: 1px solid rgba(255,255,255,.3);
+      color: white;
+    }
+    .nav-row { min-height: 88px; display: flex; align-items: center; justify-content: space-between; gap: 30px; }
+    .brand { font: 600 20px/1.2 var(--heading); letter-spacing: 1px; white-space: nowrap; }
+    .brand span { color: #c8ddf1; }
+    .nav-links { display: flex; align-items: center; gap: 34px; font-size: 11px; font-weight: 500; letter-spacing: 1.4px; text-transform: uppercase; }
+    .nav-links a { position: relative; padding-block: 8px; }
+    .nav-links a::after { position: absolute; right: 0; bottom: 0; left: 0; height: 1px; background: #c8ddf1; content: ''; transform: scaleX(0); transform-origin: left; transition: transform .25s ease; }
+    .nav-links a:hover::after, .nav-links a:focus-visible::after { transform: scaleX(1); }
+    .menu-toggle { display: none; width: 44px; height: 44px; border: 1px solid rgba(255,255,255,.55); background: transparent; color: white; cursor: pointer; }
+
+    .hero {
+      position: relative;
+      display: grid;
+      min-height: min(790px, 100svh);
+      place-items: center;
+      overflow: hidden;
+      background: var(--blue-800);
+      color: white;
+      text-align: center;
+      isolation: isolate;
+    }
+    .hero::before {
+      position: absolute;
+      z-index: -2;
+      inset: 0;
+      background: url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=2200&q=88') center 43% / cover;
+      content: '';
+      animation: hero-arrive 1.2s ease-out both;
+    }
+    .hero::after { position: absolute; z-index: -1; inset: 0; background: linear-gradient(115deg, rgba(20,49,83,.7), rgba(38,82,132,.48) 56%, rgba(77,121,166,.39)); content: ''; }
+    .hero-content { width: min(820px, calc(100% - 44px)); padding-top: 70px; animation: rise-in .85s .12s both; }
+    .eyebrow { display: block; margin-bottom: 20px; color: #d4e4f3; font-size: 11px; font-weight: 500; letter-spacing: 3.8px; text-transform: uppercase; }
+    h1, h2, h3 { margin: 0; font-family: var(--heading); font-weight: 500; line-height: 1.2; }
+    h1 { font-size: clamp(42px, 6vw, 76px); text-shadow: 0 2px 22px rgba(13,37,64,.2); }
+    .hero p { max-width: 620px; margin: 22px auto 34px; color: #f0f5fa; font-size: 15px; font-weight: 300; }
+    .button { display: inline-flex; min-height: 52px; align-items: center; justify-content: center; padding: 0 27px; border: 1px solid #d0e0ef; background: var(--blue-800); color: white; font: 500 11px var(--heading); letter-spacing: 1.4px; text-transform: uppercase; transition: background .2s, color .2s, transform .2s; }
+    .button:hover { transform: translateY(-2px); background: #e5eef7; color: var(--blue-950); }
+    .scroll-note { position: absolute; bottom: 25px; left: 50%; display: flex; align-items: center; gap: 12px; color: rgba(255,255,255,.82); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; transform: translateX(-50%); }
+    .scroll-note::after { width: 1px; height: 32px; background: rgba(255,255,255,.65); content: ''; }
+
+    .intro { padding: 100px 0 94px; background: var(--blue-050); text-align: center; }
+    .intro .eyebrow, .section-kicker { color: var(--blue-700); }
+    .intro h2 { color: var(--blue-950); font-size: clamp(30px, 4vw, 44px); }
+    .intro p { max-width: 690px; margin: 20px auto 0; color: var(--muted); font-size: 14px; }
+    .rule { width: 54px; height: 1px; margin: 25px auto 0; background: var(--blue-500); }
+
+    .collection { padding: 88px 0 96px; }
+    .collection:nth-of-type(even) { background: white; }
+    .collection-head { display: flex; align-items: end; justify-content: space-between; gap: 28px; margin-bottom: 34px; }
+    .section-kicker { display: block; margin-bottom: 12px; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; }
+    .collection h2, .films h2 { color: var(--blue-950); font-size: clamp(30px, 3.3vw, 42px); }
+    .collection-head p { margin: 12px 0 0; color: var(--muted); font-size: 13px; }
+    .text-link { display: inline-flex; align-items: center; gap: 10px; padding-bottom: 5px; border-bottom: 1px solid var(--blue-500); color: var(--blue-800); font-size: 11px; font-weight: 600; letter-spacing: .6px; white-space: nowrap; }
+    .text-link span { font-size: 17px; transition: transform .2s; }
+    .text-link:hover span { transform: translate(3px,-2px); }
+    .photo-grid { display: grid; grid-template-columns: 1.1fr .9fr 1fr; gap: 18px; }
+    .photo { position: relative; min-height: 370px; overflow: hidden; background: var(--blue-150); }
+    .photo:nth-child(2) { margin-top: 38px; }
+    .photo:nth-child(3) { margin-top: 76px; }
+    .photo img { height: 100%; min-height: 370px; object-fit: cover; transition: transform .65s cubic-bezier(.2,.7,.2,1); }
+    .photo:hover img { transform: scale(1.045); }
+    .photo::after { position: absolute; inset: 45% 0 0; background: linear-gradient(transparent, rgba(17,43,73,.55)); content: ''; }
+    .photo-label { position: absolute; z-index: 1; right: 20px; bottom: 18px; left: 20px; color: white; font: 500 13px var(--heading); letter-spacing: .5px; }
+
+    .films { padding: 92px 0 100px; background: linear-gradient(135deg, #e6eef7, #f3f7fb 58%, #dce8f3); }
+    .films-top { display: flex; align-items: end; justify-content: space-between; gap: 30px; margin-bottom: 35px; }
+    .films-top p { max-width: 430px; margin: 12px 0 0; color: var(--muted); font-size: 13px; }
+    .film-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .film { position: relative; overflow: hidden; background: var(--blue-950); aspect-ratio: 16 / 10; }
+    .film img { height: 100%; object-fit: cover; opacity: .84; transition: transform .5s, opacity .3s; }
+    .film:hover img { transform: scale(1.04); opacity: .65; }
+    .play { position: absolute; top: 50%; left: 50%; display: grid; width: 52px; height: 52px; place-items: center; border: 1px solid rgba(255,255,255,.85); border-radius: 50%; color: white; font-size: 15px; transform: translate(-50%,-50%); }
+    .film-caption { padding: 14px 2px 0; color: var(--blue-950); font: 500 13px var(--heading); }
+
+    .footer { padding: 66px 0 24px; background: var(--blue-950); color: #e8f0f8; text-align: center; }
+    .footer-brand { font: 600 21px var(--heading); letter-spacing: 1px; }
+    .footer p { max-width: 570px; margin: 15px auto 24px; color: #c5d5e5; font-size: 12px; }
+    .socials { display: flex; justify-content: center; gap: 24px; color: #d7e5f2; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
+    .footer-bottom { margin-top: 44px; padding-top: 18px; border-top: 1px solid rgba(221,235,247,.2); color: #aec3d8; font-size: 9px; letter-spacing: .5px; }
+
+    @keyframes rise-in { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes hero-arrive { from { transform: scale(1.035); } to { transform: scale(1); } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+    @media (max-width: 760px) {
+      .container { width: min(100% - 40px, 600px); }
+      .nav-row { min-height: 72px; }
+      .brand { font-size: 16px; }
+      .menu-toggle { display: grid; place-items: center; }
+      .nav-links { position: absolute; top: 71px; right: 0; left: 0; display: none; padding: 10px 24px 22px; background: var(--blue-950); flex-direction: column; align-items: stretch; gap: 0; }
+      .nav-links.is-open { display: flex; }
+      .nav-links a { padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.15); }
+      .hero { min-height: 700px; min-height: 100svh; }
+      .hero-content { padding-top: 50px; }
+      .hero p { font-size: 13px; }
+      .intro { padding: 76px 0 70px; }
+      .collection { padding: 68px 0 76px; }
+      .collection-head, .films-top { align-items: start; flex-direction: column; }
+      .photo-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .photo { min-height: 270px; }
+      .photo:nth-child(2), .photo:nth-child(3) { margin-top: 0; }
+      .photo:last-child { grid-column: 1 / -1; min-height: 310px; }
+      .photo img { min-height: 270px; }
+      .photo:last-child img { min-height: 310px; }
+      .films { padding: 72px 0 78px; }
+      .film-grid { grid-template-columns: 1fr; gap: 24px; }
+      .footer { padding-top: 54px; }
+    }
+    @media (max-width: 420px) {
+      .container { width: calc(100% - 32px); }
+      .hero { min-height: 680px; min-height: 100svh; }
+      .eyebrow { font-size: 9px; letter-spacing: 2.7px; }
+      .photo-grid { grid-template-columns: 1fr; }
+      .photo, .photo:nth-child(2), .photo:nth-child(3), .photo:last-child { grid-column: auto; min-height: 340px; }
+      .photo img, .photo:last-child img { min-height: 340px; }
+    }
+
+    .site-header { position: fixed; background: transparent; border-bottom-color: transparent; transition: background .3s, border-color .3s; }
+    .site-header.is-solid { background: rgba(243, 247, 251, .97); border-bottom-color: var(--blue-300); color: var(--blue-950); backdrop-filter: blur(10px); }
+    .site-header.is-solid .nav-links a { color: var(--ink); }
+    .site-header.is-solid .brand { color: var(--blue-950); }
+    .site-header.is-solid .menu-toggle { color: var(--blue-950); border-color: var(--blue-300); background: rgba(243,247,251,.9); }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-menu { position: absolute; top: 100%; left: -16px; display: none; min-width: 210px; padding: 8px 0; border: 1px solid var(--blue-300); background: var(--blue-050); box-shadow: 0 12px 24px rgba(22,55,94,.12); }
+    .nav-dropdown:hover .nav-dropdown-menu, .nav-dropdown:focus-within .nav-dropdown-menu { display: block; }
+    .nav-links .nav-dropdown-menu a { display: flex; min-height: 40px; align-items: center; padding: 8px 16px; color: var(--ink) !important; font-size: 10px; white-space: nowrap; }
+    .nav-links .nav-dropdown-menu a::after { display: none; }
+    .hero { min-height: 100vh; padding-top: 80px; }
+    .hero::before { background: var(--blue-950); animation: none; }
+    .hero-video { position: absolute; z-index: -2; inset: 0; overflow: hidden; background: var(--blue-950); pointer-events: none; }
+    .hero-video-player { position: absolute; top: 50%; left: 50%; width: max(100vw, 177.78vh); height: max(100vh, 56.25vw); transform: translate(-50%, -50%); border: 0; pointer-events: none; }
+    .hero-overlay { position: absolute; z-index: -1; inset: 0; background: linear-gradient(to bottom, rgba(22,55,94,.35), rgba(40,85,138,.58)); }
+    .hero-content { max-width: 800px; }
+    .hero-content .eyebrow { color: var(--blue-150); font-size: 12px; letter-spacing: 4px; }
+    .hero h1 { margin-bottom: 2rem; font-size: clamp(42px, 6vw, 72px); }
+    .hero p { max-width: 600px; margin: 0 auto 2rem; font-size: 1.2rem; }
+    .hero .button { border: 1px solid var(--blue-300); background: var(--blue-800); color: white; font-size: 14px; }
+    .hero .button:hover { background: transparent; color: white; }
+    .collection { padding: 5.5rem 0; }
+    .collection:nth-of-type(odd) { background: white; }
+    .collection-head { align-items: flex-end; margin-bottom: 2.25rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--blue-300); }
+    .collection-head h2, .films h2 { margin-bottom: .35rem; font-size: 2rem; }
+    .section-kicker { margin-bottom: .6rem; color: var(--blue-800); font-family: var(--body); font-size: .75rem; }
+    .collection-head p, .films-top p { max-width: 620px; margin: 0; }
+    .collection-head .text-link { padding-bottom: .4rem; border-color: var(--blue-500); color: var(--blue-950); font-family: var(--heading); font-size: 13px; }
+    .photo-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(.65rem, 1.25vw, 1.1rem); }
+    .photo { aspect-ratio: 4 / 3; min-height: 0; border-radius: 3px; }
+    .photo:nth-child(2), .photo:nth-child(3) { margin-top: 0; }
+    .photo img { height: 100%; min-height: 0; }
+    .photo::after, .photo-label { display: none; }
+    .photo.is-hidden { display: none; }
+    .collection .home-photo-more { display: flex; align-items: center; justify-content: center; gap: 1.25rem; margin-top: 1.5rem; }
+    .home-photo-more-count { color: var(--muted); font-size: .82rem; }
+    .home-photo-more-button { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: .55rem; padding: .6rem 1rem; border: 1px solid var(--blue-300); border-radius: 2px; background: transparent; color: var(--blue-950); font: 600 .88rem var(--body); cursor: pointer; }
+    .home-photo-more-button:hover { border-color: var(--blue-800); background: var(--blue-800); color: white; }
+    .home-films-section { padding: 4rem 0; background: var(--blue-050); }
+    .home-films-content { display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+    .home-films-content .eyebrow { margin-bottom: .45rem; color: var(--blue-700); font-size: .78rem; letter-spacing: 2px; }
+    .home-films-content h2 { color: var(--blue-950); font-size: 2rem; }
+    .home-films-content p { margin: 0; }
+    .home-films-content .button { flex: 0 0 auto; border-color: var(--blue-700); background: var(--blue-700); color: white; }
+    .home-films-content .button:hover { background: transparent; color: var(--blue-800); }
+    .home-films-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+    .home-film-preview { display: block; color: var(--ink); font: 600 14px var(--heading); }
+    .home-film-preview img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; margin-bottom: .65rem; background: var(--blue-150); }
+    .footer { margin-top: 0; padding: 4rem 0 2rem; border-top: 1px solid var(--blue-300); background: var(--blue-050); color: var(--ink); }
+    .footer-brand { margin-bottom: 1rem; color: var(--blue-950); font: 600 2rem var(--heading); }
+    .footer p { max-width: 600px; margin: 0 auto; color: var(--muted); font-size: 14px; }
+    .socials { gap: 1.5rem; margin: 2rem 0; color: var(--ink); }
+    .footer-bottom { margin-top: 3rem; padding-top: 2rem; border-color: var(--blue-300); color: var(--muted); font-size: .85rem; }
+    @media (max-width: 760px) {
+      .site-header.is-solid .nav-links { background: var(--blue-050); }
+      .nav-dropdown-menu { position: static; padding-left: 16px; border: 0; box-shadow: none; }
+      .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+      .collection-head { align-items: flex-start; }
+      .photo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .home-films-content { align-items: flex-start; flex-direction: column; }
+      .home-films-grid { grid-template-columns: 1fr; }
+      .footer { padding-top: 3rem; }
+    }
+    @media (max-width: 420px) {
+      .photo-grid { grid-template-columns: 1fr; }
+      .home-photo-more { align-items: center; flex-direction: column; }
+    }
+
+    .brand span { color: var(--gold); }
+    .nav-links a::after { background: var(--gold); }
+    .hero-content .eyebrow { color: var(--gold); }
+    .hero .button { border-color: var(--gold); background: var(--blue-950); color: var(--gold); }
+    .hero .button:hover { background: var(--gold); color: var(--blue-950); }
+    .collection-head { border-bottom-color: var(--gold); }
+    .collection-head .text-link { border-bottom-color: var(--gold); }
+    .home-photo-more-button:hover { border-color: var(--gold); background: var(--blue-950); color: var(--gold); }
+    .home-films-content .button { border-color: var(--gold); background: var(--blue-950); color: var(--gold); }
+    .home-films-content .button:hover { background: var(--gold); color: var(--blue-950); }
+    .footer-bottom { border-color: var(--gold); }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-row">
+      <a class="brand" href="#home" aria-label="Candids and Classics home">CANDIDS <span>&amp;</span> CLASSICS</a>
+      <button class="menu-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="primary-navigation"><span aria-hidden="true">☰</span></button>
+      <nav class="nav-links" id="primary-navigation" aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <div class="nav-dropdown">
+          <a href="#weddings">Portfolio</a>
+          <div class="nav-dropdown-menu">
+            <a href="#weddings">Weddings</a>
+            <a href="#films">Wedding Films</a>
+            <a href="#kids">Kids Photography</a>
+            <a href="#everyday">Everyday Joys</a>
+          </div>
+        </div>
+        <a href="#blog">Blog</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-video" aria-hidden="true">
+        <iframe class="hero-video-player" src="https://www.youtube.com/embed/ueuj4cmeLzI?autoplay=1&amp;mute=1&amp;loop=1&amp;playlist=ueuj4cmeLzI&amp;controls=0&amp;disablekb=1&amp;fs=0&amp;iv_load_policy=3&amp;playsinline=1&amp;rel=0&amp;modestbranding=1" title="Candids &amp; Classics wedding film" allow="autoplay; encrypted-media" loading="eager" referrerpolicy="strict-origin-when-cross-origin" tabindex="-1"></iframe>
+      </div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <span class="eyebrow">Premium Wedding Photography</span>
+        <h1>Timeless Indian Elegance</h1>
+        <p>We craft visual poems that celebrate the grandeur, traditions, and raw emotions of your most special day.</p>
+        <a class="button" href="#collections">View Our Masterpieces</a>
+      </div>
+      <a class="scroll-note" href="#weddings">Discover</a>
+    </section>
+
+    <section class="collection" id="weddings">
+      <div class="container">
+        <div class="collection-head">
+          <div><span class="section-kicker">Collection 01</span><h2>Wedding Photography</h2><p>The rituals, the embraces, and every beautiful moment in between.</p></div>
+          <a class="text-link" href="#contact">Explore gallery <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="photo-grid" data-gallery="weddings" aria-label="Wedding Photography gallery">
+          <a class="photo" href="#weddings"><img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=900&q=82" alt="Wedding photography placeholder 1" loading="lazy"></a>
+          <a class="photo" href="#weddings"><img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=900&q=82" alt="Wedding photography placeholder 2" loading="lazy"></a>
+          <a class="photo" href="#weddings"><img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&w=900&q=82" alt="Wedding photography placeholder 3" loading="lazy"></a>
+          <a class="photo" href="#weddings"><img src="https://images.unsplash.com/photo-1465495976277-4387d4b0e4a6?auto=format&fit=crop&w=900&q=82" alt="Wedding photography placeholder 4" loading="lazy"></a>
+          <a class="photo" href="#weddings"><img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=900&q=82" alt="Wedding photography placeholder 5" loading="lazy"></a>
+          <a class="photo" href="#weddings"><img src="https://images.unsplash.com/photo-1507504031003-b417219a0fed?auto=format&fit=crop&w=900&q=82" alt="Wedding photography placeholder 6" loading="lazy"></a>
+          <a class="photo is-hidden" href="#weddings"><img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&w=900&q=82" alt="Wedding photography placeholder 7" loading="lazy"></a>
+        </div>
+        <div class="home-photo-more"><span class="home-photo-more-count">Showing 6 of 7</span><button class="home-photo-more-button" type="button">Show 1 more <span aria-hidden="true">↓</span></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="collection" id="kids">
+      <div class="container">
+        <div class="collection-head">
+          <div><span class="section-kicker">Collection 02</span><h2>Kids Photography</h2><p>Big personalities and little moments, just as they happen.</p></div>
+          <a class="text-link" href="#contact">Explore gallery <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="photo-grid" data-gallery="kids" aria-label="Kids Photography gallery">
+          <a class="photo" href="#kids"><img src="https://images.unsplash.com/photo-1476703993599-0035a21b17a9?auto=format&fit=crop&w=900&q=82" alt="Kids photography placeholder 1" loading="lazy"></a>
+          <a class="photo" href="#kids"><img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=900&q=82" alt="Kids photography placeholder 2" loading="lazy"></a>
+          <a class="photo" href="#kids"><img src="https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=900&q=82" alt="Kids photography placeholder 3" loading="lazy"></a>
+          <a class="photo" href="#kids"><img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=900&q=82" alt="Kids photography placeholder 4" loading="lazy"></a>
+          <a class="photo" href="#kids"><img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=900&q=82" alt="Kids photography placeholder 5" loading="lazy"></a>
+          <a class="photo" href="#kids"><img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=900&q=82" alt="Kids photography placeholder 6" loading="lazy"></a>
+          <a class="photo is-hidden" href="#kids"><img src="https://images.unsplash.com/photo-1476703993599-0035a21b17a9?auto=format&fit=crop&w=900&q=82" alt="Kids photography placeholder 7" loading="lazy"></a>
+        </div>
+        <div class="home-photo-more"><span class="home-photo-more-count">Showing 6 of 7</span><button class="home-photo-more-button" type="button">Show 1 more <span aria-hidden="true">↓</span></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="collection" id="everyday">
+      <div class="container">
+        <div class="collection-head">
+          <div><span class="section-kicker">Collection 03</span><h2>Everyday Joys</h2><p>The everyday connections that become lifelong keepsakes.</p></div>
+          <a class="text-link" href="#contact">Explore gallery <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="photo-grid" data-gallery="everyday" aria-label="Everyday Joys gallery">
+          <a class="photo" href="#everyday"><img src="https://images.unsplash.com/photo-1476703993599-0035a21b17a9?auto=format&fit=crop&w=900&q=82" alt="Everyday Joys photography placeholder 1" loading="lazy"></a>
+          <a class="photo" href="#everyday"><img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=900&q=82" alt="Everyday Joys photography placeholder 2" loading="lazy"></a>
+          <a class="photo" href="#everyday"><img src="https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=900&q=82" alt="Everyday Joys photography placeholder 3" loading="lazy"></a>
+          <a class="photo" href="#everyday"><img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=900&q=82" alt="Everyday Joys photography placeholder 4" loading="lazy"></a>
+          <a class="photo" href="#everyday"><img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=900&q=82" alt="Everyday Joys photography placeholder 5" loading="lazy"></a>
+          <a class="photo" href="#everyday"><img src="https://images.unsplash.com/photo-1476703993599-0035a21b17a9?auto=format&fit=crop&w=900&q=82" alt="Everyday Joys photography placeholder 6" loading="lazy"></a>
+          <a class="photo is-hidden" href="#everyday"><img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=900&q=82" alt="Everyday Joys photography placeholder 7" loading="lazy"></a>
+        </div>
+        <div class="home-photo-more"><span class="home-photo-more-count">Showing 6 of 7</span><button class="home-photo-more-button" type="button">Show 1 more <span aria-hidden="true">↓</span></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-films-section" id="films">
+      <div class="container home-films-content">
+        <div><span class="eyebrow">Moving stories</span><h2>Wedding Films</h2><p>Relive the voices, music, and moments that made the day yours.</p></div>
+        <a class="button" href="#films">Watch wedding films</a>
+      </div>
+      <div class="container home-films-grid">
+        <a class="home-film-preview" href="#films"><img src="https://images.unsplash.com/photo-1465495976277-4387d4b0e4a6?auto=format&fit=crop&w=900&q=82" alt="Dummy wedding film thumbnail 1" loading="lazy"><span>Wedding Film Preview</span></a>
+        <a class="home-film-preview" href="#films"><img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=900&q=82" alt="Dummy wedding film thumbnail 2" loading="lazy"><span>Wedding Film Preview</span></a>
+        <a class="home-film-preview" href="#films"><img src="https://images.unsplash.com/photo-1507504031003-b417219a0fed?auto=format&fit=crop&w=900&q=82" alt="Dummy wedding film thumbnail 3" loading="lazy"><span>Wedding Film Preview</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" id="contact">
+    <div class="container">
+      <div class="footer-brand">CANDIDS &amp; CLASSICS</div>
+      <p>Capturing the beauty of weddings, childhood, and all the little moments in between. Every glance, every laugh, and every smile tells a timeless story.</p>
+      <div class="socials"><a href="#contact">Instagram</a><a href="#contact">Facebook</a><a href="mailto:hello@candidsandclassics.com" aria-label="Email Candids and Classics">Email</a></div>
+      <div class="footer-bottom">© 2026 Candids &amp; Classics Studio. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    const menuButton = document.querySelector('.menu-toggle');
+    const navigation = document.querySelector('.nav-links');
+    const header = document.querySelector('.site-header');
+    const updateHeader = () => header.classList.toggle('is-solid', window.scrollY > 50 || navigation.classList.contains('is-open'));
+    window.addEventListener('scroll', updateHeader, { passive: true });
+    menuButton.addEventListener('click', () => {
+      const isOpen = menuButton.getAttribute('aria-expanded') === 'true';
+      menuButton.setAttribute('aria-expanded', String(!isOpen));
+      menuButton.setAttribute('aria-label', isOpen ? 'Open menu' : 'Close menu');
+      navigation.classList.toggle('is-open', !isOpen);
+      updateHeader();
+    });
+    navigation.addEventListener('click', event => {
+      if (event.target.closest('a')) {
+        navigation.classList.remove('is-open');
+        menuButton.setAttribute('aria-expanded', 'false');
+        menuButton.setAttribute('aria-label', 'Open navigation menu');
+        updateHeader();
+      }
+    });
+    document.querySelectorAll('.home-photo-more-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const section = button.closest('.collection');
+        const gallery = section.querySelector('.photo-grid');
+        const hiddenPhotos = [...gallery.querySelectorAll('.photo.is-hidden')].slice(0, 6);
+        hiddenPhotos.forEach(photo => photo.classList.remove('is-hidden'));
+        const visible = gallery.querySelectorAll('.photo:not(.is-hidden)').length;
+        const count = gallery.querySelectorAll('.photo').length;
+        section.querySelector('.home-photo-more-count').textContent = `Showing ${visible} of ${count}`;
+        if (visible === count) button.closest('.home-photo-more').remove();
+      });
+    });
+  </script>
+</body>
+</html>

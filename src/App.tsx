@@ -18,8 +18,10 @@ function App() {
           <Route path="portfolio" element={<PortfolioList />} />
           <Route path="portfolio/weddings" element={<PortfolioList />} />
           <Route path="portfolio/kids-photography" element={<PortfolioList />} />
-          <Route path="portfolio/everyday-joys" element={<PortfolioList />} />
+          <Route path="portfolio/documentary-films" element={<PortfolioList />} />
           <Route path="portfolio/wedding-films" element={<WeddingFilms />} />
+          <Route path="portfolio/kids-films" element={<WeddingFilms />} />
+          <Route path="portfolio/documentary-films/:clientName" element={<PortfolioDetail />} />
           <Route path="portfolio/:category/:clientName" element={<PortfolioDetail />} />
           <Route path="portfolio/:clientName" element={<PortfolioDetail />} />
           <Route path="about" element={<About />} />

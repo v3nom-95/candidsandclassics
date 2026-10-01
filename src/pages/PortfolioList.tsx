@@ -12,9 +12,9 @@ const categoryContent: Record<PortfolioCategory, { title: string; description: s
     title: 'Kids Photography',
     description: 'Big imaginations, little details, and the wonderfully unscripted moments of growing up.',
   },
-  'everyday-joys': {
-    title: 'Everyday Joys',
-    description: 'The ordinary moments that become the stories you keep coming back to.',
+  'documentary-films': {
+    title: 'Documentary Films',
+    description: 'Real moments, honest emotion, and the stories that deserve to be revisited on screen.',
   },
 };
 

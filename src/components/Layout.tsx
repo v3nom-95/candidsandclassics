@@ -49,7 +49,8 @@ export const Layout: React.FC = () => {
                 <Link to="/portfolio/weddings" onClick={() => setMobileMenuOpen(false)}>Weddings</Link>
                 <Link to="/portfolio/wedding-films" onClick={() => setMobileMenuOpen(false)}>Wedding Films</Link>
                 <Link to="/portfolio/kids-photography" onClick={() => setMobileMenuOpen(false)}>Kids Photography</Link>
-                <Link to="/portfolio/everyday-joys" onClick={() => setMobileMenuOpen(false)}>Everyday Joys</Link>
+                <Link to="/portfolio/kids-films" onClick={() => setMobileMenuOpen(false)}>Kids Films</Link>
+                <Link to="/portfolio/documentary-films" onClick={() => setMobileMenuOpen(false)}>Documentary Films</Link>
               </div>
             </div>
             <Link to="/blog" onClick={() => setMobileMenuOpen(false)} className={location.pathname.includes('/blog') ? 'active' : ''} style={{ color: navSolid ? 'var(--color-text-dark)' : 'var(--color-text-light)' }}>Blog</Link>

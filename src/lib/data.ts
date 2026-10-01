@@ -5,7 +5,8 @@ export interface Portfolio {
   photos: string[];
 }
 
-export type PortfolioCategory = 'weddings' | 'kids-photography' | 'everyday-joys';
+export type PortfolioCategory = 'weddings' | 'kids-photography' | 'documentary-films';
+export type VideoCategory = 'wedding-films' | 'kids-films' | 'documentary-films';
 
 export interface WeddingFilm {
   title: string;
@@ -17,9 +18,14 @@ export const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1Axm
 export const PORTFOLIO_SHEET_CSV_URLS: Record<PortfolioCategory, string> = {
   weddings: GOOGLE_SHEET_CSV_URL,
   'kids-photography': 'https://docs.google.com/spreadsheets/d/11o6D6lYRvB7buJQ7G7YCJpD56HUCp59AmnlUgfa8xp8/export?format=csv',
-  'everyday-joys': '',
+  'documentary-films': '',
 };
-export const WEDDING_FILMS_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1UafxfsA9-TcYhCJ1Q5MZJ0YJgz7sP8CGn85ztK3q9po/export?format=csv';
+
+export const VIDEO_SHEET_CSV_URLS: Record<VideoCategory, string> = {
+  'wedding-films': 'https://docs.google.com/spreadsheets/d/1UafxfsA9-TcYhCJ1Q5MZJ0YJgz7sP8CGn85ztK3q9po/export?format=csv',
+  'kids-films': '',
+  'documentary-films': '',
+};
 
 export const fetchPortfolios = async (category: PortfolioCategory = 'weddings'): Promise<Portfolio[]> => {
   const sheetUrl = PORTFOLIO_SHEET_CSV_URLS[category];
@@ -93,23 +99,28 @@ const getYouTubeVideoId = (url: string): string => {
   return match?.[1] ?? '';
 };
 
-export const fetchWeddingFilms = async (): Promise<WeddingFilm[]> => {
-  if (!WEDDING_FILMS_SHEET_CSV_URL) return [];
+export const fetchVideoCollection = async (category: VideoCategory): Promise<WeddingFilm[]> => {
+  const sheetUrl = VIDEO_SHEET_CSV_URLS[category];
+  if (!sheetUrl) return [];
 
   try {
-    const response = await fetch(WEDDING_FILMS_SHEET_CSV_URL);
+    const response = await fetch(sheetUrl);
     if (!response.ok) throw new Error(`Google Sheets returned ${response.status}`);
     const result = Papa.parse<string[]>(await response.text(), { skipEmptyLines: true });
     return result.data.slice(1).flatMap((row) => {
       const videoId = getYouTubeVideoId(row[1] ?? '');
       return videoId ? [{
-        title: row[0] || 'Wedding Film',
+        title: row[0] || category.replace('-', ' '),
         videoId,
         description: row[2] || '',
       }] : [];
     });
   } catch (error) {
-    console.error('Failed to fetch wedding films from Google Sheets', error);
+    console.error(`Failed to fetch ${category} from Google Sheets`, error);
     return [];
   }
 };
+
+export const fetchWeddingFilms = async (): Promise<WeddingFilm[]> => fetchVideoCollection('wedding-films');
+export const fetchKidsFilms = async (): Promise<WeddingFilm[]> => fetchVideoCollection('kids-films');
+export const fetchDocumentaryFilms = async (): Promise<WeddingFilm[]> => fetchVideoCollection('documentary-films');

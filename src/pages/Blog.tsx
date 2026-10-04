@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { SEOHead } from '../components/SEOHead';
 
 const BLOG_POSTS = [
   {
@@ -25,9 +26,50 @@ const BLOG_POSTS = [
   }
 ];
 
+const BLOG_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "@id": "https://candidsandclassics.com/blog#blogpage",
+  "url": "https://candidsandclassics.com/blog",
+  "name": "Photography Journal & Blog | Candids & Classics Hyderabad",
+  "description": "Wedding photography tips, Indian wedding traditions, bridal portrait guides, and behind-the-scenes stories from Hyderabad's best photography studio.",
+  "isPartOf": { "@id": "https://candidsandclassics.com/#website" },
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://candidsandclassics.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://candidsandclassics.com/blog" }
+    ]
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "itemListElement": BLOG_POSTS.map((post, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "item": {
+        "@type": "BlogPosting",
+        "headline": post.title,
+        "description": post.excerpt,
+        "datePublished": post.date,
+        "image": post.image,
+        "author": { "@id": "https://candidsandclassics.com/#organization" },
+        "publisher": { "@id": "https://candidsandclassics.com/#organization" }
+      }
+    }))
+  }
+};
+
 export const Blog: React.FC = () => {
   return (
     <div className="content-page">
+      <SEOHead
+        title="Photography Blog & Journal – Wedding Tips & Inspiration"
+        description="Read expert tips on Indian wedding photography, bridal portraits, haldi ceremonies, baraat processions, and more from Candids & Classics – Hyderabad's leading photography studio. Expert wedding photography advice and behind-the-scenes stories."
+        keywords="wedding photography tips, Indian wedding traditions, bridal portrait tips, haldi ceremony photography, baraat photography tips, wedding photography blog Hyderabad, photography inspiration, best wedding photographer blog India"
+        canonicalPath="/blog"
+        ogType="blog"
+        jsonLd={BLOG_JSON_LD}
+      />
       <div className="container">
         <h1 className="page-title animate-fade-in text-center">Journal</h1>
         <p className="text-center mb-8 animate-fade-in delay-100" style={{ maxWidth: '600px', margin: '0 auto', fontSize: '1.1rem' }}>

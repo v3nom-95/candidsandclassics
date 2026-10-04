@@ -1,4 +1,22 @@
 import React from 'react';
+import { SEOHead } from '../components/SEOHead';
+
+const CONTACT_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "@id": "https://candidsandclassics.com/contact#contactpage",
+  "url": "https://candidsandclassics.com/contact",
+  "name": "Contact Candids & Classics – Book Your Photography Session",
+  "description": "Get in touch with Candids & Classics, Hyderabad's best photography studio. WhatsApp us at +91 99510 99998 to book your wedding, kids, or documentary photography session.",
+  "isPartOf": { "@id": "https://candidsandclassics.com/#website" },
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://candidsandclassics.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Contact", "item": "https://candidsandclassics.com/contact" }
+    ]
+  }
+};
 
 export const Contact: React.FC = () => {
   const whatsappNumber = '919951099998';
@@ -6,6 +24,13 @@ export const Contact: React.FC = () => {
 
   return (
     <div className="content-page">
+      <SEOHead
+        title="Contact Us – Book Your Photography Session"
+        description="Contact Candids & Classics, Hyderabad's best photography studio. Reach us on WhatsApp at +91 99510 99998 to discuss your wedding photography, kids photography, or film project. Available for bookings across Hyderabad, Telangana, and Andhra Pradesh."
+        keywords="contact Candids and Classics, book wedding photographer Hyderabad, photography studio phone number Hyderabad, hire photographer Hyderabad, wedding photography booking, kids photography booking Hyderabad, best photographer contact Hyderabad"
+        canonicalPath="/contact"
+        jsonLd={CONTACT_JSON_LD}
+      />
       <div className="container">
         <h1 className="page-title animate-fade-in text-center">Get In Touch</h1>
         <p className="text-center mb-8 animate-fade-in delay-100" style={{ maxWidth: '600px', margin: '0 auto 3rem', fontSize: '1.1rem' }}>

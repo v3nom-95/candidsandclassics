@@ -3,6 +3,13 @@ import { useParams, Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, ArrowLeft } from 'lucide-react';
 import { fetchPortfolios } from '../lib/data';
 import type { Portfolio, PortfolioCategory } from '../lib/data';
+import { SEOHead } from '../components/SEOHead';
+
+const categoryLabels: Record<string, string> = {
+  weddings: 'Wedding Photography',
+  'kids-photography': 'Kids Photography',
+  'documentary-films': 'Documentary Films',
+};
 
 export const PortfolioDetail: React.FC = () => {
   const { category: routeCategory, clientName } = useParams<{ category?: string; clientName: string }>();
@@ -133,8 +140,44 @@ export const PortfolioDetail: React.FC = () => {
     );
   }
 
+  const categoryLabel = categoryLabels[category] || 'Photography';
+  const detailJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ImageGallery",
+    "@id": `https://candidsandclassics.com/portfolio/${category}/${encodeURIComponent(portfolio.clientName)}#gallery`,
+    "url": `https://candidsandclassics.com/portfolio/${category}/${encodeURIComponent(portfolio.clientName)}`,
+    "name": `${portfolio.clientName} – ${categoryLabel} by Candids & Classics`,
+    "description": `${categoryLabel} album for ${portfolio.clientName}. ${portfolio.photos.length} professionally captured moments by Candids & Classics, Hyderabad's best photography studio.`,
+    "numberOfItems": portfolio.photos.length,
+    "isPartOf": { "@id": "https://candidsandclassics.com/#website" },
+    "provider": { "@id": "https://candidsandclassics.com/#organization" },
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://candidsandclassics.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Portfolio", "item": "https://candidsandclassics.com/portfolio" },
+        { "@type": "ListItem", "position": 3, "name": categoryLabel, "item": `https://candidsandclassics.com/portfolio/${category}` },
+        { "@type": "ListItem", "position": 4, "name": portfolio.clientName, "item": `https://candidsandclassics.com/portfolio/${category}/${encodeURIComponent(portfolio.clientName)}` }
+      ]
+    },
+    "image": portfolio.photos.slice(0, 5).map(url => ({
+      "@type": "ImageObject",
+      "url": url,
+      "creator": { "@id": "https://candidsandclassics.com/#organization" }
+    }))
+  };
+
   return (
     <div className="album-page">
+      <SEOHead
+        title={`${portfolio.clientName} – ${categoryLabel} Album`}
+        description={`View the ${categoryLabel.toLowerCase()} album of ${portfolio.clientName}. ${portfolio.photos.length} beautiful moments captured by Candids & Classics, Hyderabad's premier photography studio. Candid, emotional, and timeless.`}
+        keywords={`${portfolio.clientName} wedding photos, ${categoryLabel.toLowerCase()} Hyderabad, Candids and Classics portfolio, ${portfolio.clientName} photography album, best ${categoryLabel.toLowerCase()} Hyderabad`}
+        canonicalPath={`/portfolio/${category}/${encodeURIComponent(portfolio.clientName)}`}
+        ogImage={portfolio.photos[0]}
+        ogImageAlt={`${portfolio.clientName} – ${categoryLabel} by Candids & Classics Hyderabad`}
+        jsonLd={detailJsonLd}
+      />
       {/* Header */}
       <div className="album-header">
         <Link to="/portfolio" className="album-back-btn">
@@ -142,7 +185,7 @@ export const PortfolioDetail: React.FC = () => {
           <span>All Stories</span>
         </Link>
         <div className="album-header-text">
-          <span className="album-label">Wedding Album</span>
+          <span className="album-label">{categoryLabel} Album</span>
           <h1 className="album-title">{portfolio.clientName}</h1>
           <span className="album-count">{activeIndex + 1} of {portfolio.photos.length} Moments</span>
         </div>

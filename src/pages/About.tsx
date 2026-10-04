@@ -1,8 +1,33 @@
 import React from 'react';
+import { SEOHead } from '../components/SEOHead';
+
+const ABOUT_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "@id": "https://candidsandclassics.com/about#aboutpage",
+  "url": "https://candidsandclassics.com/about",
+  "name": "About Candids & Classics – Our Story | Best Photography Studio Hyderabad",
+  "description": "Learn about Candids & Classics, Hyderabad's most trusted photography studio with 20+ years of expertise in wedding photography, kids photography, and cinematic filmmaking.",
+  "isPartOf": { "@id": "https://candidsandclassics.com/#website" },
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://candidsandclassics.com/" },
+      { "@type": "ListItem", "position": 2, "name": "About", "item": "https://candidsandclassics.com/about" }
+    ]
+  }
+};
 
 export const About: React.FC = () => {
   return (
     <div className="content-page">
+      <SEOHead
+        title="About Us – Our Story & Mission"
+        description="Candids & Classics has 20+ years of expertise in visual storytelling. Based in Hyderabad, we are the most trusted photography studio for weddings, kids photography, child portraits, and cinematic filmmaking across Telangana and Andhra Pradesh."
+        keywords="about Candids and Classics, photography studio Hyderabad, best photographers Hyderabad, wedding photographer team Hyderabad, professional photography studio Telangana, experienced wedding photographers India"
+        canonicalPath="/about"
+        jsonLd={ABOUT_JSON_LD}
+      />
       <div className="container">
         <h1 className="page-title animate-fade-in text-center" style={{ marginBottom: '4rem' }}>Our Story</h1>
         

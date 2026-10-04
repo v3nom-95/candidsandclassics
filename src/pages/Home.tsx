@@ -3,6 +3,37 @@ import { Link } from 'react-router-dom';
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import { fetchDocumentaryFilms, fetchKidsFilms, fetchPortfolios, fetchWeddingFilms } from '../lib/data';
 import type { PortfolioCategory, WeddingFilm } from '../lib/data';
+import { SEOHead } from '../components/SEOHead';
+
+const HOME_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "https://candidsandclassics.com/#homepage",
+  "url": "https://candidsandclassics.com/",
+  "name": "Candids & Classics | Best Photography Studio in Hyderabad",
+  "description": "Hyderabad's best photography studio for weddings, kids photography, child portraits, documentary films & cinematic wedding films. 20+ years of capturing timeless Indian elegance.",
+  "isPartOf": { "@id": "https://candidsandclassics.com/#website" },
+  "about": { "@id": "https://candidsandclassics.com/#localbusiness" },
+  "primaryImageOfPage": {
+    "@type": "ImageObject",
+    "url": "https://candidsandclassics.com/og-image.jpg"
+  },
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://candidsandclassics.com/"
+      }
+    ]
+  },
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [".hero-title", ".hero-subtitle"]
+  }
+};
 
 const HERO_VIDEO_ID = 'ueuj4cmeLzI';
 const HERO_VIDEO_URL = `https://www.youtube.com/embed/${HERO_VIDEO_ID}?autoplay=1&mute=1&loop=1&playlist=${HERO_VIDEO_ID}&controls=0&disablekb=1&fs=0&iv_load_policy=3&playsinline=1&rel=0&modestbranding=1`;
@@ -116,6 +147,13 @@ export const Home: React.FC = () => {
 
   return (
     <div>
+      <SEOHead
+        title="Best Wedding & Kids Photography Studio in Hyderabad"
+        description="Candids & Classics – Hyderabad's #1 photography studio. Premium wedding photography, kids & child photography, cinematic wedding films, and documentary filmmaking. 20+ years of capturing timeless Indian elegance across Telangana & Andhra Pradesh. Book your session today!"
+        keywords="best photography studio Hyderabad, best wedding photographer Hyderabad, kids photography Hyderabad, child photography Hyderabad, baby photography Hyderabad, wedding films Hyderabad, documentary films Hyderabad, candid wedding photography Hyderabad, bridal portraits, pre-wedding shoot Hyderabad, South Indian wedding photographer, Telugu wedding photography, destination wedding photographer India, Candids and Classics"
+        canonicalPath="/"
+        jsonLd={HOME_JSON_LD}
+      />
       <section className="hero">
         <div className="hero-video" aria-hidden="true">
           <iframe

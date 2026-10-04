@@ -1,0 +1,27 @@
+# Candids & Classics – Photography & Films Studio
+# https://candidsandclassics.com
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+
+# Sitemaps
+Sitemap: https://candidsandclassics.com/sitemap.xml
+
+# Crawl-delay (optional, for polite crawling)
+Crawl-delay: 1
+
+# Google specific
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+
+# Google Image Bot
+User-agent: Googlebot-Image
+Allow: /
+
+# Bing specific
+User-agent: Bingbot
+Allow: /
+Disallow: /api/

@@ -35,8 +35,6 @@ const HOME_JSON_LD = {
   }
 };
 
-const HERO_VIDEO_ID = 'ueuj4cmeLzI';
-const HERO_VIDEO_URL = `https://www.youtube.com/embed/${HERO_VIDEO_ID}?autoplay=1&mute=1&loop=1&playlist=${HERO_VIDEO_ID}&controls=0&disablekb=1&fs=0&iv_load_policy=3&playsinline=1&rel=0&modestbranding=1`;
 const PHOTO_PAGE_SIZE = 6;
 
 const photoCategories: { key: PortfolioCategory; title: string; description: string }[] = [
@@ -156,14 +154,14 @@ export const Home: React.FC = () => {
       />
       <section className="hero">
         <div className="hero-video" aria-hidden="true">
-          <iframe
+          <video
             className="hero-video-player"
-            src={HERO_VIDEO_URL}
-            title="Candids & Classics wedding film"
-            allow="autoplay; encrypted-media"
-            loading="eager"
-            referrerPolicy="strict-origin-when-cross-origin"
-            tabIndex={-1}
+            src="/home-hero.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
           />
         </div>
         <div className="hero-overlay"></div>

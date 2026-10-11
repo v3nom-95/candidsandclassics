@@ -14,6 +14,15 @@ export interface WeddingFilm {
   description: string;
 }
 
+export interface BlogPost {
+  id: string;
+  title: string;
+  date: string;
+  image: string;
+  excerpt: string;
+  link?: string;
+}
+
 // -------------------------------------------------------------
 // SHEET CONFIGURATION (11 SHEETS TOTAL)
 // -------------------------------------------------------------
@@ -45,7 +54,7 @@ const PORTFOLIO_VIDEO_SHEETS: Record<string, string> = {
 };
 
 // 3. BLOG SHEET (1 Sheet)
-export const BLOG_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/BLOG_SHEET_ID/export?format=csv';
+export const BLOG_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1JRepF-k3NYweaWIRxA9-tBuX03x8Ae0vZqzJT0vTlNA/export?format=csv';
 
 // -------------------------------------------------------------
 // DATA FETCHING LOGIC
@@ -157,3 +166,37 @@ export const fetchVideoCollection = async (category: VideoCategory, isHome: bool
 export const fetchWeddingFilms = async (isHome: boolean = false): Promise<WeddingFilm[]> => fetchVideoCollection('wedding-films', isHome);
 export const fetchKidsFilms = async (isHome: boolean = false): Promise<WeddingFilm[]> => fetchVideoCollection('kids-films', isHome);
 export const fetchDocumentaryFilms = async (isHome: boolean = false): Promise<WeddingFilm[]> => fetchVideoCollection('documentary-films', isHome);
+
+export const fetchBlogPosts = async (): Promise<BlogPost[]> => {
+  if (!BLOG_SHEET_CSV_URL || BLOG_SHEET_CSV_URL.includes('BLOG_SHEET_ID')) return [];
+  try {
+    const response = await fetch(BLOG_SHEET_CSV_URL);
+    if (!response.ok) throw new Error(`Google Sheets returned ${response.status}`);
+    const result = Papa.parse<string[]>(await response.text(), { skipEmptyLines: true });
+    return result.data.slice(1).flatMap((row, index) => {
+      const title = row[0]?.trim();
+      if (!title) return [];
+      let image = row[2]?.trim() || '';
+      const fileMatch = image.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+      if (fileMatch && fileMatch[1]) {
+        image = `https://lh3.googleusercontent.com/d/${fileMatch[1]}=w1200`;
+      } else if (image.includes('drive.google.com/open?id=') || image.includes('drive.google.com/uc')) {
+        const idMatch = image.match(/id=([a-zA-Z0-9_-]+)/);
+        if (idMatch && idMatch[1]) {
+          image = `https://lh3.googleusercontent.com/d/${idMatch[1]}=w1200`;
+        }
+      }
+      return [{
+        id: String(index + 1),
+        title,
+        date: row[1]?.trim() || '',
+        image,
+        excerpt: row[3]?.trim() || '',
+        link: row[4]?.trim() || '',
+      }];
+    });
+  } catch (error) {
+    console.error('Failed to fetch blog posts from Google Sheets', error);
+    return [];
+  }
+};

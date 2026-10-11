@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { fetchWeddingFilms, fetchKidsFilms } from '../lib/data';
+import { fetchWeddingFilms, fetchKidsFilms, fetchDocumentaryFilms } from '../lib/data';
 import type { WeddingFilm } from '../lib/data';
 import { SEOHead } from '../components/SEOHead';
 
@@ -19,16 +19,32 @@ const pageSEO: Record<string, { title: string; description: string; keywords: st
     heading: 'Kids Films',
     intro: 'The joy, chaos, and wonder that turn everyday moments into treasured memories.',
   },
+  'documentary-films': {
+    title: 'Documentary Films – Cinematic Storytelling Hyderabad',
+    description: 'Watch our documentary films portfolio. Candids & Classics creates cinematic, emotionally rich documentary films in Hyderabad. Real stories, honest emotions, and beautifully crafted narratives.',
+    keywords: 'documentary films Hyderabad, documentary filmmaker Hyderabad, cinematic documentary India, real story films, documentary photography Hyderabad, best documentary filmmaker Telangana',
+    heading: 'Documentary Films',
+    intro: 'Real stories, honest emotion, and the timeless journeys that deserve to be revisited on screen.',
+  },
 };
 
 export const WeddingFilms: React.FC = () => {
   const location = useLocation();
-  const pageKey = location.pathname.includes('kids-films') ? 'kids-films' : 'wedding-films';
-  const seo = pageSEO[pageKey];
+  const pageKey = location.pathname.includes('kids-films')
+    ? 'kids-films'
+    : location.pathname.includes('documentary-films')
+    ? 'documentary-films'
+    : 'wedding-films';
+  const seo = pageSEO[pageKey] || pageSEO['wedding-films'];
   const [films, setFilms] = useState<WeddingFilm[]>([]);
 
   useEffect(() => {
-    const fetcher = pageKey === 'kids-films' ? fetchKidsFilms : fetchWeddingFilms;
+    const fetcher =
+      pageKey === 'kids-films'
+        ? fetchKidsFilms
+        : pageKey === 'documentary-films'
+        ? fetchDocumentaryFilms
+        : fetchWeddingFilms;
     fetcher().then(setFilms);
   }, [pageKey]);
 
@@ -101,7 +117,7 @@ export const WeddingFilms: React.FC = () => {
               </article>
             ))}
           </div>
-        ) : <p className="container text-center" style={{ padding: '4rem 0' }}>No wedding films published yet.</p>}
+        ) : <p className="container text-center" style={{ padding: '4rem 0' }}>No films published yet.</p>}
       </section>
     </div>
   );

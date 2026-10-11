@@ -113,10 +113,10 @@ export const Home: React.FC = () => {
 
   useEffect(() => {
     Promise.all([
-      Promise.all(photoCategories.map(({ key }) => fetchPortfolios(key))),
-      fetchWeddingFilms(),
-      fetchKidsFilms(),
-      fetchDocumentaryFilms(),
+      Promise.all(photoCategories.map(({ key }) => fetchPortfolios(key, true))),
+      fetchWeddingFilms(true),
+      fetchKidsFilms(true),
+      fetchDocumentaryFilms(true),
     ])
       .then(([portfolios, weddingFilms, kidsFilms, documentaryFilms]) => {
         const [weddings, kids] = portfolios;
@@ -253,11 +253,21 @@ export const Home: React.FC = () => {
               <Link to={route} className="btn btn-primary">{buttonLabel}</Link>
             </div>
             <div className="container home-films-grid">
-              {filmCollections[key].length > 0 ? filmCollections[key].slice(0, 3).map(film => (
-                <Link to={route} className="home-film-preview" key={`${key}-${film.videoId}`}>
-                  <img src={`https://img.youtube.com/vi/${film.videoId}/hqdefault.jpg`} alt="" loading="lazy" />
-                  <span>{film.title}</span>
-                </Link>
+              {filmCollections[key].length > 0 ? filmCollections[key].map(film => (
+                <article className="home-film-card" key={`${key}-${film.videoId}`}>
+                  <div className="wedding-film-video">
+                    <iframe
+                      src={`https://www.youtube-nocookie.com/embed/${film.videoId}`}
+                      title={film.title}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      allowFullScreen
+                      loading="lazy"
+                    />
+                  </div>
+                  <h3 className="home-film-title">{film.title}</h3>
+                  {film.description && <p className="home-film-desc">{film.description}</p>}
+                </article>
               )) : <p className="home-empty-state">{emptyText}</p>}
             </div>
           </section>

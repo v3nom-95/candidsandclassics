@@ -14,21 +14,45 @@ export interface WeddingFilm {
   description: string;
 }
 
-export const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1AxmyiMhkZOYT_fVKXzT1nBxhBTvxwFTyy4dT696ZERk/export?format=csv';
-export const PORTFOLIO_SHEET_CSV_URLS: Record<PortfolioCategory, string> = {
-  weddings: GOOGLE_SHEET_CSV_URL,
-  'kids-photography': 'https://docs.google.com/spreadsheets/d/11o6D6lYRvB7buJQ7G7YCJpD56HUCp59AmnlUgfa8xp8/export?format=csv',
-  'documentary-films': '',
+// -------------------------------------------------------------
+// SHEET CONFIGURATION (11 SHEETS TOTAL)
+// -------------------------------------------------------------
+
+// 1. HOME PAGE SHEETS (5 Sheets)
+const HOME_PHOTO_SHEETS: Record<string, string> = {
+  weddings: 'https://docs.google.com/spreadsheets/d/1o3Tozp9cngoarI9WQyuJI1GKe3JyGGJ89u0TAXXWJKc/export?format=csv',
+  'kids-photography': 'https://docs.google.com/spreadsheets/d/1FTaCRUtB7hJZKWaJxJzEIIl7rZmZYLmXsrVkHDTn4kc/export?format=csv',
+  'documentary-films': '', 
 };
 
-export const VIDEO_SHEET_CSV_URLS: Record<VideoCategory, string> = {
-  'wedding-films': 'https://docs.google.com/spreadsheets/d/1UafxfsA9-TcYhCJ1Q5MZJ0YJgz7sP8CGn85ztK3q9po/export?format=csv',
-  'kids-films': '',
-  'documentary-films': '',
+const HOME_VIDEO_SHEETS: Record<string, string> = {
+  'wedding-films': 'https://docs.google.com/spreadsheets/d/1S_Cx4j8cBU3Y6OxEraT9nMYe05WLciqx83x0_tEYJPw/export?format=csv',
+  'kids-films': 'https://docs.google.com/spreadsheets/d/1aqs1jlH2ATeFEXkvi-BZY-4BjsbrW_7ZH0VMsubKmqA/export?format=csv',
+  'documentary-films': 'https://docs.google.com/spreadsheets/d/1HPu0UT2vYn1AayQgIJaFxwfLdAB5z-R58wMj_Z-u4kQ/export?format=csv',
 };
 
-export const fetchPortfolios = async (category: PortfolioCategory = 'weddings'): Promise<Portfolio[]> => {
-  const sheetUrl = PORTFOLIO_SHEET_CSV_URLS[category];
+// 2. PORTFOLIO PAGE SHEETS (5 Sheets)
+const PORTFOLIO_PHOTO_SHEETS: Record<string, string> = {
+  weddings: 'https://docs.google.com/spreadsheets/d/1BWCDanBTSx_s0XMoOVwZKiDg-vpqAwvw3RBsrLLr8rc/export?format=csv',
+  'kids-photography': 'https://docs.google.com/spreadsheets/d/1tm5szHaE3eZCJL5CPkvPpGuyEijN9jiisiaR7TAu1kQ/export?format=csv',
+  'documentary-films': '', 
+};
+
+const PORTFOLIO_VIDEO_SHEETS: Record<string, string> = {
+  'wedding-films': 'https://docs.google.com/spreadsheets/d/1HWlMexyUF9y8be0YBK7zgHgZsVTKonoEW6y62SxYy3U/export?format=csv',
+  'kids-films': 'https://docs.google.com/spreadsheets/d/1uDh5ds7tDjkfDM491Icxdf9S39yWqw9NWeCBOdU9jBg/export?format=csv',
+  'documentary-films': 'https://docs.google.com/spreadsheets/d/1dAASW7IzT0EETaK-MS5NBzFyEzTJVBRe9pVms5NbKOY/export?format=csv',
+};
+
+// 3. BLOG SHEET (1 Sheet)
+export const BLOG_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/BLOG_SHEET_ID/export?format=csv';
+
+// -------------------------------------------------------------
+// DATA FETCHING LOGIC
+// -------------------------------------------------------------
+
+export const fetchPortfolios = async (category: PortfolioCategory = 'weddings', isHome: boolean = false): Promise<Portfolio[]> => {
+  const sheetUrl = isHome ? HOME_PHOTO_SHEETS[category] : PORTFOLIO_PHOTO_SHEETS[category];
   if (!sheetUrl) return [];
 
   return new Promise((resolve) => {
@@ -44,13 +68,13 @@ export const fetchPortfolios = async (category: PortfolioCategory = 'weddings'):
           for (let i = 1; i < rows.length; i++) {
             const row = rows[i];
             if (row && row.length > 0) {
-              const clientName = row[0];
-              const photos = row.slice(1)
+              const clientName = isHome ? 'Home Collection' : row[0];
+              const urlsToProcess = isHome ? row : row.slice(1);
+              
+              const photos = urlsToProcess
                 .filter(url => url && url.trim().length > 0)
                 .map(url => {
                   let finalUrl = url.trim();
-                  // Convert Google Drive links to direct image URLs using lh3.googleusercontent.com
-                  // This is more reliable than drive.google.com/uc which often gets blocked by redirects
                   const fileMatch = finalUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
                   if (fileMatch && fileMatch[1]) {
                     finalUrl = `https://lh3.googleusercontent.com/d/${fileMatch[1]}=w1200`;
@@ -67,7 +91,12 @@ export const fetchPortfolios = async (category: PortfolioCategory = 'weddings'):
                   }
                   return finalUrl;
                 });
-              if (clientName) {
+                
+              if (isHome) {
+                if (photos.length > 0) {
+                  portfolios.push({ clientName, photos });
+                }
+              } else if (clientName) {
                 portfolios.push({ clientName, photos });
               }
             }
@@ -95,12 +124,16 @@ export const fetchPortfolios = async (category: PortfolioCategory = 'weddings'):
 };
 
 const getYouTubeVideoId = (url: string): string => {
-  const match = url.match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|shorts\/|watch\?v=))([\w-]{11})/);
-  return match?.[1] ?? '';
+  if (!url) return '';
+  const clean = url.trim();
+  const match = clean.match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|shorts\/|watch\?(?:.*&)?v=))([\w-]{11})/);
+  if (match?.[1]) return match[1];
+  const fallback = clean.match(/(?:youtu\.be\/|v=)([\w-]{11})/);
+  return fallback?.[1] ?? '';
 };
 
-export const fetchVideoCollection = async (category: VideoCategory): Promise<WeddingFilm[]> => {
-  const sheetUrl = VIDEO_SHEET_CSV_URLS[category];
+export const fetchVideoCollection = async (category: VideoCategory, isHome: boolean = false): Promise<WeddingFilm[]> => {
+  const sheetUrl = isHome ? HOME_VIDEO_SHEETS[category] : PORTFOLIO_VIDEO_SHEETS[category];
   if (!sheetUrl) return [];
 
   try {
@@ -121,6 +154,6 @@ export const fetchVideoCollection = async (category: VideoCategory): Promise<Wed
   }
 };
 
-export const fetchWeddingFilms = async (): Promise<WeddingFilm[]> => fetchVideoCollection('wedding-films');
-export const fetchKidsFilms = async (): Promise<WeddingFilm[]> => fetchVideoCollection('kids-films');
-export const fetchDocumentaryFilms = async (): Promise<WeddingFilm[]> => fetchVideoCollection('documentary-films');
+export const fetchWeddingFilms = async (isHome: boolean = false): Promise<WeddingFilm[]> => fetchVideoCollection('wedding-films', isHome);
+export const fetchKidsFilms = async (isHome: boolean = false): Promise<WeddingFilm[]> => fetchVideoCollection('kids-films', isHome);
+export const fetchDocumentaryFilms = async (isHome: boolean = false): Promise<WeddingFilm[]> => fetchVideoCollection('documentary-films', isHome);

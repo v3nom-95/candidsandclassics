@@ -154,14 +154,12 @@ export const Home: React.FC = () => {
       />
       <section className="hero">
         <div className="hero-video" aria-hidden="true">
-          <video
+          <iframe
             className="hero-video-player"
-            src="/home-hero.mp4"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
+            src="https://www.youtube-nocookie.com/embed/4YH3nncZzuA?autoplay=1&mute=1&loop=1&playlist=4YH3nncZzuA&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&disablekb=1"
+            title="Candids & Classics Hero Background"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            tabIndex={-1}
           />
         </div>
         <div className="hero-overlay"></div>

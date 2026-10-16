@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowUpRight, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
 import { fetchDocumentaryFilms, fetchKidsFilms, fetchPortfolios, fetchWeddingFilms } from '../lib/data';
 import type { PortfolioCategory, WeddingFilm } from '../lib/data';
 import { SEOHead } from '../components/SEOHead';
@@ -90,6 +90,132 @@ const filmSections: {
   },
 ];
 
+// Hero rotating taglines
+const HERO_LINES = [
+  'Timeless Indian Elegance',
+  'Where Traditions Come Alive',
+  'Every Frame, A Love Story',
+  'Crafting Visual Poems',
+  'Memories That Last Forever',
+];
+
+const HERO_STATS = [
+  { value: '15+', label: 'Years of Experience' },
+  { value: '50K+', label: 'Photographs Delivered' },
+  { value: '200+', label: 'Happy Families' },
+];
+
+// Animated stat counter
+const AnimatedStat: React.FC<{ value: string; label: string; delay: number }> = ({ value, label, delay }) => {
+  const [displayed, setDisplayed] = useState('0');
+  const ref = useRef<HTMLDivElement>(null);
+  const animated = useRef(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !animated.current) {
+          animated.current = true;
+          const numericMatch = value.match(/(\d+)/);
+          if (!numericMatch) { setDisplayed(value); return; }
+          const target = parseInt(numericMatch[1], 10);
+          const suffix = value.replace(/[\d]/g, '');
+          const duration = 1400;
+          const start = performance.now();
+          const tick = (now: number) => {
+            const elapsed = now - start - delay * 1000;
+            if (elapsed < 0) { requestAnimationFrame(tick); return; }
+            const progress = Math.min(elapsed / duration, 1);
+            // ease-out cubic
+            const eased = 1 - Math.pow(1 - progress, 3);
+            setDisplayed(Math.round(eased * target) + suffix);
+            if (progress < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        }
+      },
+      { threshold: 0.5 }
+    );
+    const el = ref.current;
+    if (el) observer.observe(el);
+    return () => { if (el) observer.unobserve(el); };
+  }, [value, delay]);
+
+  return (
+    <div className="hero-stat" ref={ref} style={{ animationDelay: `${0.5 + delay}s` }}>
+      <span className="hero-stat-value">{displayed}</span>
+      <span className="hero-stat-label">{label}</span>
+    </div>
+  );
+};
+
+// Fading rotating text component
+const HeroRotatingText: React.FC = () => {
+  const [current, setCurrent] = useState(0);
+  const [phase, setPhase] = useState<'in' | 'out'>('in');
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPhase('out');
+      setTimeout(() => {
+        setCurrent(prev => (prev + 1) % HERO_LINES.length);
+        setPhase('in');
+      }, 550);
+    }, 3800);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <h1
+      className="hero-title hero-rotating-title"
+      style={{
+        opacity: phase === 'in' ? 1 : 0,
+        transform: phase === 'in' ? 'translateY(0) skewX(0deg)' : 'translateY(16px) skewX(-1deg)',
+        filter: phase === 'in' ? 'blur(0px)' : 'blur(3px)',
+        transition: 'opacity 0.55s cubic-bezier(0.4,0,0.2,1), transform 0.55s cubic-bezier(0.4,0,0.2,1), filter 0.55s ease',
+      }}
+    >
+      {HERO_LINES[current]}
+    </h1>
+  );
+};
+
+// Click-to-play film card — shows YouTube thumbnail immediately, loads iframe on click
+const FilmCard: React.FC<{ film: WeddingFilm; sectionKey: string }> = ({ film }) => {
+  const [playing, setPlaying] = useState(false);
+  const thumb = `https://img.youtube.com/vi/${film.videoId}/hqdefault.jpg`;
+
+  return (
+    <article className="hscroll-film-card">
+      <div className="hscroll-film-video">
+        {playing ? (
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${film.videoId}?autoplay=1`}
+            title={film.title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+          />
+        ) : (
+          <button className="film-thumb-btn" onClick={() => setPlaying(true)} aria-label={`Play ${film.title}`}>
+            <img src={thumb} alt={film.title} loading="lazy" />
+            <span className="film-play-icon" aria-hidden="true">
+              <svg viewBox="0 0 68 48" width="68" height="48">
+                <path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#f00"/>
+                <path d="M45 24L27 14v20" fill="#fff"/>
+              </svg>
+            </span>
+          </button>
+        )}
+      </div>
+      <div className="hscroll-film-info">
+        <h3 className="hscroll-film-title">{film.title}</h3>
+        {film.description && <p className="hscroll-film-desc">{film.description}</p>}
+      </div>
+    </article>
+  );
+};
+
 // Reusable premium horizontal scroll carousel with prev/next buttons + drag-to-scroll
 const HScrollCarousel: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children }) => {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -158,6 +284,18 @@ export const Home: React.FC = () => {
     'kids-photography': [],
     'documentary-films': [],
   });
+  const [heroMouse, setHeroMouse] = useState({ x: 0, y: 0 });
+  const heroRef = useRef<HTMLElement>(null);
+
+  const handleHeroMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    if (!heroRef.current) return;
+    const { left, top, width, height } = heroRef.current.getBoundingClientRect();
+    const x = ((e.clientX - left) / width - 0.5) * 2;  // -1 to 1
+    const y = ((e.clientY - top) / height - 0.5) * 2;
+    setHeroMouse({ x, y });
+  };
+
+  const handleHeroMouseLeave = () => setHeroMouse({ x: 0, y: 0 });
 
   useEffect(() => {
     Promise.all([
@@ -204,8 +342,20 @@ export const Home: React.FC = () => {
       />
 
       {/* ── Hero ── */}
-      <section className="hero">
-        <div className="hero-video" aria-hidden="true">
+      <section
+        className="hero"
+        ref={heroRef}
+        onMouseMove={handleHeroMouseMove}
+        onMouseLeave={handleHeroMouseLeave}
+      >
+        <div
+          className="hero-video"
+          aria-hidden="true"
+          style={{
+            transform: `translate(${heroMouse.x * -8}px, ${heroMouse.y * -6}px) scale(1.04)`,
+            transition: 'transform 0.8s cubic-bezier(0.22,1,0.36,1)',
+          }}
+        >
           <iframe
             className="hero-video-player"
             src="https://www.youtube-nocookie.com/embed/4YH3nncZzuA?autoplay=1&mute=1&loop=1&playlist=4YH3nncZzuA&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&disablekb=1"
@@ -215,17 +365,59 @@ export const Home: React.FC = () => {
           />
         </div>
         <div className="hero-overlay"></div>
-        <div className="hero-content animate-fade-in delay-200">
-          <span className="hero-subtitle">Premium Wedding Photography</span>
-          <h1 className="hero-title">Timeless Indian Elegance</h1>
-          <p className="mb-8 text-center" style={{ fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto 2rem' }}>
-            We craft visual poems that celebrate the grandeur, traditions, and raw emotions of your most special day.
+
+        {/* Main hero content — centered on the video */}
+        <div
+          className="hero-content"
+          style={{
+            transform: `translate(${heroMouse.x * 5}px, ${heroMouse.y * 4}px)`,
+            transition: 'transform 1s cubic-bezier(0.22,1,0.36,1)',
+          }}
+        >
+          {/* Eyebrow — animated gold shimmer text with flanking lines */}
+          <div className="hero-eyebrow-wrap animate-hero-item" style={{ '--hero-delay': '0.3s' } as React.CSSProperties}>
+            <span className="hero-eyebrow-line" aria-hidden="true" />
+            <span className="hero-eyebrow">✦ Premium Wedding Photography ✦</span>
+            <span className="hero-eyebrow-line" aria-hidden="true" />
+          </div>
+
+          {/* Rotating headline */}
+          <div className="animate-hero-item" style={{ '--hero-delay': '0.55s' } as React.CSSProperties}>
+            <HeroRotatingText />
+          </div>
+
+          <p className="hero-desc animate-hero-item" style={{ '--hero-delay': '0.8s' } as React.CSSProperties}>
+            We craft visual poems that celebrate the grandeur, traditions,<br />
+            and raw emotions of your most special day.
           </p>
-          <Link to="/portfolio" className="btn btn-primary">
-            View Our Masterpieces
-          </Link>
+          <div className="hero-cta-group animate-hero-item" style={{ '--hero-delay': '1.05s' } as React.CSSProperties}>
+            <Link to="/portfolio" className="btn btn-primary btn-shimmer">
+              View Our Masterpieces
+            </Link>
+            <Link to="/contact" className="btn btn-ghost">
+              Book a Session
+            </Link>
+          </div>
+        </div>
+
+        {/* Stats — absolutely pinned to bottom of hero, always fully visible */}
+        <div className="hero-stats-bar">
+          {HERO_STATS.map((stat, i) => (
+            <AnimatedStat key={i} value={stat.value} label={stat.label} delay={i * 0.18} />
+          ))}
+        </div>
+
+        {/* Scroll indicator — bouncing chevron */}
+        <div className="hero-scroll-indicator" aria-hidden="true">
+          <span className="hero-scroll-text">Scroll</span>
+          <div className="hero-scroll-chevrons">
+            <ChevronDown size={16} className="hero-scroll-chev hero-scroll-chev--1" />
+            <ChevronDown size={16} className="hero-scroll-chev hero-scroll-chev--2" />
+          </div>
         </div>
       </section>
+
+
 
       {/* ── Photo & Film sections ── */}
       {homepageSections.map((section) => {
@@ -312,22 +504,7 @@ export const Home: React.FC = () => {
             {films.length > 0 ? (
               <HScrollCarousel id={`film-scroll-${key}`}>
                 {films.map(film => (
-                  <article className="hscroll-film-card" key={`${key}-${film.videoId}`}>
-                    <div className="hscroll-film-video">
-                      <iframe
-                        src={`https://www.youtube-nocookie.com/embed/${film.videoId}`}
-                        title={film.title}
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        referrerPolicy="strict-origin-when-cross-origin"
-                        allowFullScreen
-                        loading="lazy"
-                      />
-                    </div>
-                    <div className="hscroll-film-info">
-                      <h3 className="hscroll-film-title">{film.title}</h3>
-                      {film.description && <p className="hscroll-film-desc">{film.description}</p>}
-                    </div>
-                  </article>
+                  <FilmCard film={film} sectionKey={key} key={`${key}-${film.videoId}`} />
                 ))}
               </HScrollCarousel>
             ) : (

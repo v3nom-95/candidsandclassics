@@ -31,7 +31,7 @@ export interface BlogPost {
 const HOME_PHOTO_SHEETS: Record<string, string> = {
   weddings: 'https://docs.google.com/spreadsheets/d/1o3Tozp9cngoarI9WQyuJI1GKe3JyGGJ89u0TAXXWJKc/export?format=csv',
   'kids-photography': 'https://docs.google.com/spreadsheets/d/1FTaCRUtB7hJZKWaJxJzEIIl7rZmZYLmXsrVkHDTn4kc/export?format=csv',
-  'documentary-films': '', 
+  'documentary-films': '',
 };
 
 const HOME_VIDEO_SHEETS: Record<string, string> = {
@@ -44,7 +44,7 @@ const HOME_VIDEO_SHEETS: Record<string, string> = {
 const PORTFOLIO_PHOTO_SHEETS: Record<string, string> = {
   weddings: 'https://docs.google.com/spreadsheets/d/1BWCDanBTSx_s0XMoOVwZKiDg-vpqAwvw3RBsrLLr8rc/export?format=csv',
   'kids-photography': 'https://docs.google.com/spreadsheets/d/1tm5szHaE3eZCJL5CPkvPpGuyEijN9jiisiaR7TAu1kQ/export?format=csv',
-  'documentary-films': '', 
+  'documentary-films': '',
 };
 
 const PORTFOLIO_VIDEO_SHEETS: Record<string, string> = {
@@ -72,14 +72,14 @@ export const fetchPortfolios = async (category: PortfolioCategory = 'weddings', 
         complete: (results) => {
           const rows = results.data as string[][];
           const portfolios: Portfolio[] = [];
-          
+
           // Assuming row 0 is headers, so skip it
           for (let i = 1; i < rows.length; i++) {
             const row = rows[i];
             if (row && row.length > 0) {
               const clientName = isHome ? 'Home Collection' : row[0];
               const urlsToProcess = isHome ? row : row.slice(1);
-              
+
               const photos = urlsToProcess
                 .filter(url => url && url.trim().length > 0)
                 .map(url => {
@@ -100,7 +100,7 @@ export const fetchPortfolios = async (category: PortfolioCategory = 'weddings', 
                   }
                   return finalUrl;
                 });
-                
+
               if (isHome) {
                 if (photos.length > 0) {
                   portfolios.push({ clientName, photos });

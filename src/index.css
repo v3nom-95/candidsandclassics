@@ -646,12 +646,6 @@ ul {
   font-weight: 600;
 }
 
-.home-films-content .hero-subtitle {
-  margin-bottom: 0.45rem;
-  font-size: 0.78rem;
-  letter-spacing: 2px;
-}
-
 .home-category-heading h2,
 .home-films-content h2 {
   font-size: 2rem;
@@ -787,18 +781,6 @@ ul {
 }
 
 .home-films-content h2 {
-  color: var(--color-primary);
-}
-
-.home-films-content .btn-primary {
-  flex: 0 0 auto;
-  background: var(--color-secondary);
-  border-color: var(--color-secondary);
-  color: var(--color-text-dark);
-}
-
-.home-films-content .btn-primary:hover {
-  background: transparent;
   color: var(--color-primary);
 }
 

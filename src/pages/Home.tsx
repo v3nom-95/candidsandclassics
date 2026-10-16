@@ -490,11 +490,15 @@ export const Home: React.FC = () => {
           <section className="home-films-section" key={key}>
             <div className="container home-films-content">
               <div>
-                <span className="hero-subtitle">{subtitle}</span>
+                <span className="home-category-kicker">{subtitle}</span>
                 <h2>{title}</h2>
                 <p>{description}</p>
               </div>
-              <Link to={route} className="btn btn-primary">{buttonLabel}</Link>
+              <div className="home-category-actions">
+                <Link to={route} className="home-category-link">
+                  {buttonLabel} <ArrowUpRight size={17} aria-hidden="true" />
+                </Link>
+              </div>
             </div>
 
             {/* Premium horizontal film scroll carousel */}

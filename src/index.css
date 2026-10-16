@@ -1671,3 +1671,257 @@ ul {
   white-space: nowrap;
   border-width: 0;
 }
+
+/* ============================================================
+   Premium Horizontal Scroll Carousel
+   ============================================================ */
+
+.hscroll-wrapper {
+  position: relative;
+  width: 100%;
+  padding: 1.5rem 0 2.5rem;
+  overflow: hidden;
+}
+
+/* Fade-out vignette edges */
+.hscroll-wrapper::before,
+.hscroll-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.hscroll-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, var(--hscroll-bg, #f3eadb) 0%, transparent 100%);
+}
+
+.hscroll-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, var(--hscroll-bg, #f3eadb) 0%, transparent 100%);
+}
+
+.home-category-section--alternate .hscroll-wrapper {
+  --hscroll-bg: #641b2a;
+}
+
+.home-films-section .hscroll-wrapper {
+  --hscroll-bg: var(--color-bg);
+}
+
+/* Scrollable track */
+.hscroll-track {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  overflow-y: visible;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  cursor: grab;
+  padding: 0.5rem 4rem;
+  user-select: none;
+}
+
+.hscroll-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Photo Card ── */
+.hscroll-photo-card {
+  flex: 0 0 auto;
+  position: relative;
+  width: clamp(260px, 28vw, 380px);
+  height: clamp(340px, 42vw, 520px);
+  border-radius: 4px;
+  overflow: hidden;
+  scroll-snap-align: start;
+  box-shadow: 0 12px 36px rgba(42, 27, 24, 0.2);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  transition: transform 0.42s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.42s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.hscroll-photo-card:nth-child(even) {
+  height: clamp(300px, 36vw, 460px);
+  margin-top: 2rem;
+}
+
+.hscroll-photo-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 22px 52px rgba(42, 27, 24, 0.3);
+  border-color: var(--color-secondary);
+}
+
+.hscroll-photo-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: none;
+}
+
+.hscroll-photo-card:hover img {
+  transform: scale(1.07);
+}
+
+.hscroll-photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(42, 27, 24, 0.72) 0%,
+    rgba(42, 27, 24, 0.08) 55%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  display: flex;
+  align-items: flex-end;
+  padding: 1.25rem 1.1rem;
+}
+
+.hscroll-photo-card:hover .hscroll-photo-overlay {
+  opacity: 1;
+}
+
+.hscroll-photo-label {
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
+/* ── Film Card ── */
+.hscroll-film-card {
+  flex: 0 0 auto;
+  width: clamp(300px, 38vw, 480px);
+  background: #ffffff;
+  border-radius: 6px;
+  overflow: hidden;
+  scroll-snap-align: start;
+  box-shadow: 0 10px 32px rgba(42, 27, 24, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.hscroll-film-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 48px rgba(42, 27, 24, 0.18);
+  border-color: var(--color-secondary);
+}
+
+.hscroll-film-video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+
+.hscroll-film-video iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.hscroll-film-info {
+  padding: 1rem 1.1rem 1.25rem;
+}
+
+.hscroll-film-title {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-text-dark);
+  margin: 0 0 0.3rem;
+  letter-spacing: 0.4px;
+}
+
+.hscroll-film-desc {
+  font-size: 0.85rem;
+  color: var(--color-text-dark);
+  opacity: 0.68;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── Prev / Next Arrow Buttons ── */
+.hscroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-60%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-secondary);
+  background: rgba(253, 251, 247, 0.92);
+  color: var(--color-primary);
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(42, 27, 24, 0.2);
+  transition: background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+  backdrop-filter: blur(6px);
+}
+
+.hscroll-btn:hover {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+  box-shadow: 0 6px 22px rgba(42, 27, 24, 0.32);
+}
+
+.hscroll-btn--prev { left: 0.75rem; }
+.hscroll-btn--next { right: 0.75rem; }
+
+.home-category-section--alternate .hscroll-btn {
+  background: rgba(100, 27, 42, 0.88);
+  border-color: var(--color-secondary);
+  color: var(--color-secondary);
+}
+
+.home-category-section--alternate .hscroll-btn:hover {
+  background: var(--color-secondary);
+  color: var(--color-text-dark);
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .hscroll-track {
+    padding: 0.5rem 1.5rem;
+    gap: 0.9rem;
+  }
+
+  .hscroll-photo-card {
+    width: clamp(220px, 72vw, 300px);
+    height: clamp(280px, 88vw, 400px);
+  }
+
+  .hscroll-photo-card:nth-child(even) {
+    margin-top: 0;
+    height: clamp(240px, 76vw, 360px);
+  }
+
+  .hscroll-film-card {
+    width: clamp(260px, 80vw, 360px);
+  }
+
+  .hscroll-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .hscroll-wrapper::before,
+  .hscroll-wrapper::after {
+    width: 40px;
+  }
+}

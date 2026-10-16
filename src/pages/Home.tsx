@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowDown, ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { fetchDocumentaryFilms, fetchKidsFilms, fetchPortfolios, fetchWeddingFilms } from '../lib/data';
 import type { PortfolioCategory, WeddingFilm } from '../lib/data';
 import { SEOHead } from '../components/SEOHead';
@@ -34,8 +34,6 @@ const HOME_JSON_LD = {
     "cssSelector": [".hero-title", ".hero-subtitle"]
   }
 };
-
-const PHOTO_PAGE_SIZE = 6;
 
 const photoCategories: { key: PortfolioCategory; title: string; description: string }[] = [
   {
@@ -92,6 +90,63 @@ const filmSections: {
   },
 ];
 
+// Reusable premium horizontal scroll carousel with prev/next buttons + drag-to-scroll
+const HScrollCarousel: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children }) => {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const scrollLeft = useRef(0);
+
+  const scroll = (dir: 'left' | 'right') => {
+    if (!trackRef.current) return;
+    const amount = trackRef.current.clientWidth * 0.72;
+    trackRef.current.scrollBy({ left: dir === 'right' ? amount : -amount, behavior: 'smooth' });
+  };
+
+  const onMouseDown = (e: React.MouseEvent) => {
+    if (!trackRef.current) return;
+    isDragging.current = true;
+    startX.current = e.pageX - trackRef.current.offsetLeft;
+    scrollLeft.current = trackRef.current.scrollLeft;
+    trackRef.current.style.cursor = 'grabbing';
+  };
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging.current || !trackRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - trackRef.current.offsetLeft;
+    const walk = (x - startX.current) * 1.4;
+    trackRef.current.scrollLeft = scrollLeft.current - walk;
+  };
+
+  const stopDrag = () => {
+    isDragging.current = false;
+    if (trackRef.current) trackRef.current.style.cursor = 'grab';
+  };
+
+  return (
+    <div className="hscroll-wrapper">
+      <button className="hscroll-btn hscroll-btn--prev" onClick={() => scroll('left')} aria-label="Scroll left">
+        <ChevronLeft size={22} />
+      </button>
+      <div
+        id={id}
+        ref={trackRef}
+        className="hscroll-track"
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={stopDrag}
+        onMouseLeave={stopDrag}
+      >
+        {children}
+      </div>
+      <button className="hscroll-btn hscroll-btn--next" onClick={() => scroll('right')} aria-label="Scroll right">
+        <ChevronRight size={22} />
+      </button>
+    </div>
+  );
+};
+
 export const Home: React.FC = () => {
   const [filmCollections, setFilmCollections] = useState<Record<string, WeddingFilm[]>>({
     'wedding-films': [],
@@ -102,11 +157,6 @@ export const Home: React.FC = () => {
     weddings: [],
     'kids-photography': [],
     'documentary-films': [],
-  });
-  const [visiblePhotoCounts, setVisiblePhotoCounts] = useState<Record<PortfolioCategory, number>>({
-    weddings: PHOTO_PAGE_SIZE,
-    'kids-photography': PHOTO_PAGE_SIZE,
-    'documentary-films': PHOTO_PAGE_SIZE,
   });
 
   useEffect(() => {
@@ -152,6 +202,8 @@ export const Home: React.FC = () => {
         canonicalPath="/"
         jsonLd={HOME_JSON_LD}
       />
+
+      {/* ── Hero ── */}
       <section className="hero">
         <div className="hero-video" aria-hidden="true">
           <iframe
@@ -175,13 +227,20 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
+      {/* ── Photo & Film sections ── */}
       {homepageSections.map((section) => {
         if (section.type === 'photo') {
           const { key, title, description } = section.item;
           const categoryIndex = key === 'weddings' ? 0 : 1;
+          const isAlternate = categoryIndex % 2 === 1;
+          const photos = galleries[key];
 
           return (
-            <section className={`section home-category-section${categoryIndex % 2 === 1 ? ' home-category-section--alternate' : ''}`} key={key}>
+            <section
+              className={`section home-category-section${isAlternate ? ' home-category-section--alternate' : ''}`}
+              key={key}
+            >
+              {/* Section header */}
               <div className="container">
                 <div className="home-category-heading">
                   <div>
@@ -191,52 +250,52 @@ export const Home: React.FC = () => {
                   </div>
                   <div className="home-category-actions">
                     <span className="home-photo-count">
-                      {galleries[key].length} {galleries[key].length === 1 ? 'photograph' : 'photographs'}
+                      {photos.length} {photos.length === 1 ? 'photograph' : 'photographs'}
                     </span>
                     <Link to={`/portfolio/${key}`} className="home-category-link">
                       Explore gallery <ArrowUpRight size={17} aria-hidden="true" />
                     </Link>
                   </div>
                 </div>
-                <div className="home-photo-grid" aria-label={`${title}: ${galleries[key].length} photographs`}>
-                  {galleries[key].length > 0 ? galleries[key].slice(0, visiblePhotoCounts[key]).map((photo, photoIndex) => (
-                    <Link to={`/portfolio/${key}`} className="home-photo" key={`${photo}-${photoIndex}`}>
+              </div>
+
+              {/* Premium horizontal photo scroll carousel */}
+              {photos.length > 0 ? (
+                <HScrollCarousel id={`photo-scroll-${key}`}>
+                  {photos.map((photo, idx) => (
+                    <Link
+                      to={`/portfolio/${key}`}
+                      className="hscroll-photo-card"
+                      key={`${photo}-${idx}`}
+                      draggable={false}
+                    >
                       <img
                         src={photo}
-                        alt={`${title} photograph ${photoIndex + 1}`}
+                        alt={`${title} photograph ${idx + 1}`}
                         loading="lazy"
-                        onError={event => {
-                          event.currentTarget.style.display = 'none';
-                          event.currentTarget.parentElement?.classList.add('is-unavailable');
+                        draggable={false}
+                        onError={e => {
+                          (e.currentTarget.closest('.hscroll-photo-card') as HTMLElement | null)?.style.setProperty('display', 'none');
                         }}
                       />
+                      <div className="hscroll-photo-overlay">
+                        <span className="hscroll-photo-label">{title}</span>
+                      </div>
                     </Link>
-                  )) : <p className="home-empty-state">No published photos in this sheet yet.</p>}
+                  ))}
+                </HScrollCarousel>
+              ) : (
+                <div className="container">
+                  <p className="home-empty-state">No published photos in this sheet yet.</p>
                 </div>
-                {galleries[key].length > visiblePhotoCounts[key] && (
-                  <div className="home-photo-more">
-                    <span className="home-photo-more-count">
-                      Showing {visiblePhotoCounts[key]} of {galleries[key].length}
-                    </span>
-                    <button
-                      className="home-photo-more-button"
-                      type="button"
-                      onClick={() => setVisiblePhotoCounts(current => ({
-                        ...current,
-                        [key]: current[key] + PHOTO_PAGE_SIZE,
-                      }))}
-                    >
-                      Show {Math.min(PHOTO_PAGE_SIZE, galleries[key].length - visiblePhotoCounts[key])} more
-                      <ArrowDown size={16} aria-hidden="true" />
-                    </button>
-                  </div>
-                )}
-              </div>
+              )}
             </section>
           );
         }
 
+        // Film section
         const { key, title, subtitle, description, buttonLabel, route, emptyText } = section.item;
+        const films = filmCollections[key];
 
         return (
           <section className="home-films-section" key={key}>
@@ -248,24 +307,34 @@ export const Home: React.FC = () => {
               </div>
               <Link to={route} className="btn btn-primary">{buttonLabel}</Link>
             </div>
-            <div className="container home-films-grid">
-              {filmCollections[key].length > 0 ? filmCollections[key].map(film => (
-                <article className="home-film-card" key={`${key}-${film.videoId}`}>
-                  <div className="wedding-film-video">
-                    <iframe
-                      src={`https://www.youtube-nocookie.com/embed/${film.videoId}`}
-                      title={film.title}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      referrerPolicy="strict-origin-when-cross-origin"
-                      allowFullScreen
-                      loading="lazy"
-                    />
-                  </div>
-                  <h3 className="home-film-title">{film.title}</h3>
-                  {film.description && <p className="home-film-desc">{film.description}</p>}
-                </article>
-              )) : <p className="home-empty-state">{emptyText}</p>}
-            </div>
+
+            {/* Premium horizontal film scroll carousel */}
+            {films.length > 0 ? (
+              <HScrollCarousel id={`film-scroll-${key}`}>
+                {films.map(film => (
+                  <article className="hscroll-film-card" key={`${key}-${film.videoId}`}>
+                    <div className="hscroll-film-video">
+                      <iframe
+                        src={`https://www.youtube-nocookie.com/embed/${film.videoId}`}
+                        title={film.title}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        referrerPolicy="strict-origin-when-cross-origin"
+                        allowFullScreen
+                        loading="lazy"
+                      />
+                    </div>
+                    <div className="hscroll-film-info">
+                      <h3 className="hscroll-film-title">{film.title}</h3>
+                      {film.description && <p className="hscroll-film-desc">{film.description}</p>}
+                    </div>
+                  </article>
+                ))}
+              </HScrollCarousel>
+            ) : (
+              <div className="container">
+                <p className="home-empty-state">{emptyText}</p>
+              </div>
+            )}
           </section>
         );
       })}

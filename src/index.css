@@ -180,10 +180,13 @@ ul {
   justify-content: center;
   position: relative;
   isolation: isolate;
-  overflow: hidden;
+  /* overflow:clip clips visual overflow (like overflow:hidden) but does NOT
+     establish a scroll container — so absolutely-positioned children at
+     bottom:0 are never clipped off. Wide support (Chrome 90+, FF 102+, Safari 16+). */
+  overflow: clip;
   padding-top: 80px;
-  /* reserve space at bottom for the absolutely-positioned stats bar (~80px tall) */
-  padding-bottom: 80px;
+  /* reserve space at bottom for the absolutely-positioned stats bar (~90px tall) */
+  padding-bottom: 90px;
 }
 
 .hero-bg {
@@ -450,10 +453,12 @@ ul {
   z-index: 4;
   display: flex;
   align-items: stretch;
-  background: rgba(20, 8, 10, 0.55);
+  background: rgba(20, 8, 10, 0.65);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-top: 1px solid rgba(212, 175, 55, 0.3);
+  /* ensure Safari doesn't clip with notch */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .hero-stat {
@@ -1775,7 +1780,7 @@ ul {
 
   .hero {
     min-height: 88svh;
-    padding: 6rem 1rem 3rem;
+    padding: 6rem 1rem 90px;
   }
 
   .hero-content {
@@ -2222,7 +2227,7 @@ ul {
   /* Hero mobile */
   .hero {
     padding-top: 70px;
-    padding-bottom: 60px;
+    padding-bottom: 80px;
   }
 
   .hero-content {

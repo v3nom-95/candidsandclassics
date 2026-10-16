@@ -71,46 +71,32 @@ export const fetchPortfolios = async (category: PortfolioCategory = 'weddings', 
         skipEmptyLines: true,
         complete: (results) => {
           const rows = results.data as string[][];
-          const portfolios: Portfolio[] = [];
+          // Both home and portfolio pages: treat every cell in every row (skip header row 0)
+          // as a photo URL — no client-wise separation.
+          const allPhotos: string[] = [];
 
-          // Assuming row 0 is headers, so skip it
           for (let i = 1; i < rows.length; i++) {
             const row = rows[i];
-            if (row && row.length > 0) {
-              const clientName = isHome ? 'Home Collection' : row[0];
-              const urlsToProcess = isHome ? row : row.slice(1);
-
-              const photos = urlsToProcess
-                .filter(url => url && url.trim().length > 0)
-                .map(url => {
-                  let finalUrl = url.trim();
-                  const fileMatch = finalUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-                  if (fileMatch && fileMatch[1]) {
-                    finalUrl = `https://lh3.googleusercontent.com/d/${fileMatch[1]}=w1200`;
-                  } else if (finalUrl.includes('drive.google.com/open?id=')) {
-                    const idMatch = finalUrl.match(/id=([a-zA-Z0-9_-]+)/);
-                    if (idMatch && idMatch[1]) {
-                      finalUrl = `https://lh3.googleusercontent.com/d/${idMatch[1]}=w1200`;
-                    }
-                  } else if (finalUrl.includes('drive.google.com/uc')) {
-                    const idMatch = finalUrl.match(/id=([a-zA-Z0-9_-]+)/);
-                    if (idMatch && idMatch[1]) {
-                      finalUrl = `https://lh3.googleusercontent.com/d/${idMatch[1]}=w1200`;
-                    }
-                  }
-                  return finalUrl;
-                });
-
-              if (isHome) {
-                if (photos.length > 0) {
-                  portfolios.push({ clientName, photos });
-                }
-              } else if (clientName) {
-                portfolios.push({ clientName, photos });
+            if (!row || row.length === 0) continue;
+            // For home the whole row is URLs; for portfolio the sheet may have
+            // a client name in col 0 — we skip that if it doesn't look like a URL.
+            const startCol = (!isHome && row[0] && !row[0].trim().startsWith('http')) ? 1 : 0;
+            for (let c = startCol; c < row.length; c++) {
+              const raw = row[c]?.trim();
+              if (!raw) continue;
+              let finalUrl = raw;
+              const fileMatch = finalUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+              if (fileMatch?.[1]) {
+                finalUrl = `https://lh3.googleusercontent.com/d/${fileMatch[1]}=w1200`;
+              } else if (finalUrl.includes('drive.google.com/open?id=') || finalUrl.includes('drive.google.com/uc')) {
+                const idMatch = finalUrl.match(/id=([a-zA-Z0-9_-]+)/);
+                if (idMatch?.[1]) finalUrl = `https://lh3.googleusercontent.com/d/${idMatch[1]}=w1200`;
               }
+              allPhotos.push(finalUrl);
             }
           }
-          resolve(portfolios);
+
+          resolve(allPhotos.length > 0 ? [{ clientName: 'Gallery', photos: allPhotos }] : []);
         },
         error: (error: Error) => {
           console.error(`Failed to parse ${category} portfolio sheet`, error);

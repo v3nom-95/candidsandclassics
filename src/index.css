@@ -1951,6 +1951,86 @@ ul {
 }
 
 /* ============================================================
+   Portfolio Masonry Gallery
+   ============================================================ */
+
+.portfolio-masonry {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.portfolio-masonry-col {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.portfolio-photo-btn {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--color-accent);
+  box-shadow: 0 6px 20px rgba(42, 27, 24, 0.12);
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.portfolio-photo-btn:hover {
+  transform: translateY(-4px) scale(1.012);
+  box-shadow: 0 16px 36px rgba(42, 27, 24, 0.22);
+}
+
+.portfolio-photo-btn:focus-visible {
+  outline: 3px solid var(--color-secondary);
+  outline-offset: 3px;
+}
+
+.portfolio-photo-btn img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: none;
+}
+
+.portfolio-photo-btn:hover img {
+  transform: scale(1.06);
+}
+
+.portfolio-photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(140, 33, 49, 0.18) 0%,
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.portfolio-photo-btn:hover .portfolio-photo-overlay {
+  opacity: 1;
+}
+
+@media (max-width: 640px) {
+  .portfolio-masonry {
+    gap: 0.5rem;
+  }
+
+  .portfolio-masonry-col {
+    gap: 0.5rem;
+  }
+}
+
+/* ============================================================
    Premium Horizontal Scroll Carousel
    ============================================================ */
 
@@ -2089,20 +2169,21 @@ ul {
 .hscroll-film-card {
   flex: 0 0 auto;
   width: clamp(300px, 38vw, 480px);
-  background: #ffffff;
+  background: #000;
   border-radius: 6px;
   overflow: hidden;
   scroll-snap-align: start;
-  box-shadow: 0 10px 32px rgba(42, 27, 24, 0.1);
-  border: 1px solid rgba(212, 175, 55, 0.35);
+  box-shadow: 0 10px 32px rgba(42, 27, 24, 0.18);
+  border: 1px solid rgba(212, 175, 55, 0.25);
   transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-              box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+              box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              border-color 0.3s ease;
 }
 
 .hscroll-film-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 20px 48px rgba(42, 27, 24, 0.18);
-  border-color: var(--color-secondary);
+  box-shadow: 0 22px 52px rgba(42, 27, 24, 0.28);
+  border-color: rgba(212, 175, 55, 0.55);
 }
 
 .hscroll-film-video {
@@ -2150,12 +2231,14 @@ ul {
   left: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
-  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
-  transition: transform 0.3s ease;
+  /* subtle drop shadow to lift icon off dark/bright thumbnails */
+  filter: drop-shadow(0 2px 12px rgba(0,0,0,0.45));
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s ease;
 }
 
 .film-thumb-btn:hover .film-play-icon {
-  transform: translate(-50%, -50%) scale(1.12);
+  transform: translate(-50%, -50%) scale(1.1);
+  opacity: 0.95;
 }
 
 .hscroll-film-info {

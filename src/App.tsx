@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { Home } from './pages/Home';
 import { PortfolioList } from './pages/PortfolioList';
-import { PortfolioDetail } from './pages/PortfolioDetail';
 import { About } from './pages/About';
 import { Blog } from './pages/Blog';
 import { Contact } from './pages/Contact';
@@ -21,9 +20,6 @@ function App() {
           <Route path="portfolio/documentary-films" element={<WeddingFilms />} />
           <Route path="portfolio/wedding-films" element={<WeddingFilms />} />
           <Route path="portfolio/kids-films" element={<WeddingFilms />} />
-          <Route path="portfolio/documentary-films/:clientName" element={<PortfolioDetail />} />
-          <Route path="portfolio/:category/:clientName" element={<PortfolioDetail />} />
-          <Route path="portfolio/:clientName" element={<PortfolioDetail />} />
           <Route path="about" element={<About />} />
           <Route path="blog" element={<Blog />} />
           <Route path="contact" element={<Contact />} />

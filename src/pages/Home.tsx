@@ -95,59 +95,10 @@ const HERO_LINES = [
   'Timeless Indian Elegance',
   'Where Traditions Come Alive',
   'Every Frame, A Love Story',
+  '15+ Years of Excellence',
   'Crafting Visual Poems',
   'Memories That Last Forever',
 ];
-
-const HERO_STATS = [
-  { value: '15+', label: 'Years of Experience' },
-  { value: '50K+', label: 'Photographs Delivered' },
-  { value: '200+', label: 'Happy Families' },
-];
-
-// Animated stat counter
-const AnimatedStat: React.FC<{ value: string; label: string; delay: number }> = ({ value, label, delay }) => {
-  const [displayed, setDisplayed] = useState('0');
-  const ref = useRef<HTMLDivElement>(null);
-  const animated = useRef(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !animated.current) {
-          animated.current = true;
-          const numericMatch = value.match(/(\d+)/);
-          if (!numericMatch) { setDisplayed(value); return; }
-          const target = parseInt(numericMatch[1], 10);
-          const suffix = value.replace(/[\d]/g, '');
-          const duration = 1400;
-          const start = performance.now();
-          const tick = (now: number) => {
-            const elapsed = now - start - delay * 1000;
-            if (elapsed < 0) { requestAnimationFrame(tick); return; }
-            const progress = Math.min(elapsed / duration, 1);
-            // ease-out cubic
-            const eased = 1 - Math.pow(1 - progress, 3);
-            setDisplayed(Math.round(eased * target) + suffix);
-            if (progress < 1) requestAnimationFrame(tick);
-          };
-          requestAnimationFrame(tick);
-        }
-      },
-      { threshold: 0.5 }
-    );
-    const el = ref.current;
-    if (el) observer.observe(el);
-    return () => { if (el) observer.unobserve(el); };
-  }, [value, delay]);
-
-  return (
-    <div className="hero-stat" ref={ref} style={{ animationDelay: `${0.5 + delay}s` }}>
-      <span className="hero-stat-value">{displayed}</span>
-      <span className="hero-stat-label">{label}</span>
-    </div>
-  );
-};
 
 // Fading rotating text component
 const HeroRotatingText: React.FC = () => {
@@ -395,13 +346,6 @@ export const Home: React.FC = () => {
               Book a Session
             </Link>
           </div>
-        </div>
-
-        {/* Stats — absolutely pinned to bottom of hero, always fully visible */}
-        <div className="hero-stats-bar">
-          {HERO_STATS.map((stat, i) => (
-            <AnimatedStat key={i} value={stat.value} label={stat.label} delay={i * 0.18} />
-          ))}
         </div>
 
         {/* Scroll indicator — bouncing chevron */}

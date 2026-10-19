@@ -7,7 +7,6 @@ export const Layout: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const isHome = location.pathname === '/';
-  // Solid when: scrolled past hero, not on home, or mobile menu open
   const navSolid = scrolled || !isHome || mobileMenuOpen;
 
   useEffect(() => {
@@ -39,7 +38,6 @@ export const Layout: React.FC = () => {
   const logoColor = navSolid ? 'var(--color-primary)' : 'var(--color-text-light)';
   const linkColor = navSolid ? 'var(--color-text-dark)' : 'var(--color-text-light)';
 
-  return (
   return (
     <>
       <nav className={`navbar${navSolid ? ' navbar--solid' : ''}`} style={navStyle}>
@@ -108,7 +106,6 @@ export const Layout: React.FC = () => {
           <div className="footer-bottom">
             &copy; {new Date().getFullYear()} Candids & Classics Studio. All rights reserved. | Best Photography Studio in Hyderabad
           </div>
-          {/* Hidden SEO-rich text for screen readers and crawlers */}
           <p className="sr-only">
             Candids and Classics is the best photography studio in Hyderabad, Telangana, India. We specialize in wedding photography, kids photography, child photography, baby photography, newborn photography, maternity photography, birthday photography, family photography, bridal portraits, pre-wedding shoots, engagement photography, cinematic wedding films, documentary films, and destination wedding photography. Serving Hyderabad, Secunderabad, Telangana, Andhra Pradesh, and all of India. Contact us on WhatsApp at +91 99510 99998.
           </p>

@@ -6,13 +6,13 @@ export const Layout: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
-  const navSolid = scrolled || location.pathname !== '/' || mobileMenuOpen;
+  const isHome = location.pathname === '/';
+  // Solid when: scrolled past hero, not on home, or mobile menu open
+  const navSolid = scrolled || !isHome || mobileMenuOpen;
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
+    const handleScroll = () => setScrolled(window.scrollY > 60);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -20,14 +20,31 @@ export const Layout: React.FC = () => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
+  const navStyle: React.CSSProperties = navSolid
+    ? {
+        background: 'rgba(253, 251, 247, 0.97)',
+        backdropFilter: 'blur(18px)',
+        WebkitBackdropFilter: 'blur(18px)',
+        borderBottom: '1px solid var(--color-accent)',
+        padding: '0.9rem 0',
+      }
+    : {
+        background: 'transparent',
+        backdropFilter: 'none',
+        WebkitBackdropFilter: 'none',
+        borderBottom: 'none',
+        padding: '1.5rem 0',
+      };
+
+  const logoColor = navSolid ? 'var(--color-primary)' : 'var(--color-text-light)';
+  const linkColor = navSolid ? 'var(--color-text-dark)' : 'var(--color-text-light)';
+
+  return (
   return (
     <>
-      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`} style={{
-        background: navSolid ? 'rgba(253, 251, 247, 0.97)' : 'transparent',
-        borderBottom: navSolid ? '1px solid var(--color-accent)' : 'none',
-      }}>
+      <nav className={`navbar${navSolid ? ' navbar--solid' : ''}`} style={navStyle}>
         <div className="container">
-          <Link to="/" className="navbar-logo" style={{ color: navSolid ? 'var(--color-primary)' : 'var(--color-text-light)' }}>
+          <Link to="/" className="navbar-logo" style={{ color: logoColor }}>
             CANDIDS <span style={{ color: 'var(--color-secondary)' }}>&</span> CLASSICS
           </Link>
           <button
@@ -41,10 +58,10 @@ export const Layout: React.FC = () => {
             {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
           <div className={`navbar-links ${mobileMenuOpen ? 'is-open' : ''}`} id="primary-navigation">
-            <Link to="/" onClick={() => setMobileMenuOpen(false)} className={location.pathname === '/' ? 'active' : ''} style={{ color: navSolid ? 'var(--color-text-dark)' : 'var(--color-text-light)' }}>Home</Link>
-            <Link to="/about" onClick={() => setMobileMenuOpen(false)} className={location.pathname.includes('/about') ? 'active' : ''} style={{ color: navSolid ? 'var(--color-text-dark)' : 'var(--color-text-light)' }}>About</Link>
+            <Link to="/" onClick={() => setMobileMenuOpen(false)} className={location.pathname === '/' ? 'active' : ''} style={{ color: linkColor }}>Home</Link>
+            <Link to="/about" onClick={() => setMobileMenuOpen(false)} className={location.pathname.includes('/about') ? 'active' : ''} style={{ color: linkColor }}>About</Link>
             <div className={`nav-dropdown ${location.pathname.includes('/portfolio') ? 'active' : ''}`}>
-              <Link to="/portfolio/weddings" onClick={() => setMobileMenuOpen(false)} className={location.pathname.includes('/portfolio') ? 'active' : ''} style={{ color: navSolid ? 'var(--color-text-dark)' : 'var(--color-text-light)' }}>Portfolio</Link>
+              <Link to="/portfolio/weddings" onClick={() => setMobileMenuOpen(false)} className={location.pathname.includes('/portfolio') ? 'active' : ''} style={{ color: linkColor }}>Portfolio</Link>
               <div className="nav-dropdown-menu">
                 <Link to="/portfolio/weddings" onClick={() => setMobileMenuOpen(false)}>Weddings</Link>
                 <Link to="/portfolio/wedding-films" onClick={() => setMobileMenuOpen(false)}>Wedding Films</Link>
@@ -53,8 +70,8 @@ export const Layout: React.FC = () => {
                 <Link to="/portfolio/documentary-films" onClick={() => setMobileMenuOpen(false)}>Documentary Films</Link>
               </div>
             </div>
-            <Link to="/blog" onClick={() => setMobileMenuOpen(false)} className={location.pathname.includes('/blog') ? 'active' : ''} style={{ color: navSolid ? 'var(--color-text-dark)' : 'var(--color-text-light)' }}>Blog</Link>
-            <Link to="/contact" onClick={() => setMobileMenuOpen(false)} className={location.pathname.includes('/contact') ? 'active' : ''} style={{ color: navSolid ? 'var(--color-text-dark)' : 'var(--color-text-light)' }}>Contact</Link>
+            <Link to="/blog" onClick={() => setMobileMenuOpen(false)} className={location.pathname.includes('/blog') ? 'active' : ''} style={{ color: linkColor }}>Blog</Link>
+            <Link to="/contact" onClick={() => setMobileMenuOpen(false)} className={location.pathname.includes('/contact') ? 'active' : ''} style={{ color: linkColor }}>Contact</Link>
           </div>
         </div>
       </nav>

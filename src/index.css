@@ -74,11 +74,9 @@ ul {
   left: 0;
   width: 100%;
   padding: 1.5rem 0;
-  background: rgba(253, 251, 247, 0.95);
-  backdrop-filter: blur(10px);
   z-index: 1000;
-  border-bottom: 1px solid var(--color-accent);
-  transition: all 0.3s ease;
+  /* background, border, backdrop-filter all controlled by JS inline styles */
+  transition: background 0.4s ease, border-color 0.4s ease, padding 0.3s ease;
 }
 
 .navbar .container {
@@ -122,6 +120,13 @@ ul {
 .navbar-links a:hover::after,
 .navbar-links a.active::after {
   width: 100%;
+}
+
+/* When navbar is transparent (over hero), the toggle button should also be light */
+.navbar:not(.navbar--solid) .navbar-toggle {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--color-text-light);
 }
 
 .nav-dropdown {

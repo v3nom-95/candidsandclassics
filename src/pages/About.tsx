@@ -1,5 +1,6 @@
 import React from 'react';
 import { SEOHead } from '../components/SEOHead';
+import aboutImg from '../assets/about.jpg';
 
 const ABOUT_JSON_LD = {
   "@context": "https://schema.org",
@@ -34,8 +35,8 @@ export const About: React.FC = () => {
         <div className="about-content animate-fade-in delay-200">
           <div>
             <img 
-              src="https://images.unsplash.com/photo-1595981267035-7b04d84b52ad?auto=format&fit=crop&w=800&q=80" 
-              alt="Candids & Classics Studio"
+              src={aboutImg}
+              alt="Candids & Classics Studio – Our Team"
               className="about-image"
             />
           </div>
